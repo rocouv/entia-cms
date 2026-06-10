@@ -1,0 +1,86 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-background: #f9f9fa;
+    --color-on-background: #1a1c1d;
+    --color-surface: #f9f9fa;
+    --color-surface-dim: #dadadb;
+    --color-surface-bright: #f9f9fa;
+    --color-surface-container-lowest: #ffffff;
+    --color-surface-container-low: #f3f3f4;
+    --color-surface-container: #eeeeef;
+    --color-surface-container-high: #e8e8e9;
+    --color-surface-container-highest: #e2e2e3;
+    --color-on-surface: #1a1c1d;
+    --color-on-surface-variant: #47464b;
+    --color-inverse-surface: #2f3132;
+    --color-inverse-on-surface: #f0f1f2;
+    --color-outline: #77767b;
+    --color-outline-variant: #c8c5cb;
+    --color-surface-tint: #5f5e61;
+    --color-primary: #000000;
+    --color-on-primary: #ffffff;
+    --color-primary-container: #1b1b1e;
+    --color-on-primary-container: #858387;
+    --color-inverse-primary: #c8c5ca;
+    --color-secondary: #5d5e66;
+    --color-on-secondary: #ffffff;
+    --color-secondary-container: #e3e1ec;
+    --color-on-secondary-container: #63646c;
+    --color-tertiary: #000000;
+    --color-on-tertiary: #ffffff;
+    --color-tertiary-container: #1a1c1e;
+    --color-on-tertiary-container: #838487;
+    --color-error: #ba1a1a;
+    --color-on-error: #ffffff;
+    --color-error-container: #ffdad6;
+    --color-on-error-container: #93000a;
+
+    --radius-sm: 0.125rem;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 0.75rem;
+
+    --spacing-3xl: 64px;
+
+    --text-headline-xl: 36px;
+    --text-headline-xl--line-height: 44px;
+    --text-headline-xl--font-weight: 700;
+    --text-headline-xl--letter-spacing: -0.02em;
+    --text-headline-lg: 28px;
+    --text-headline-lg--line-height: 36px;
+    --text-headline-lg--font-weight: 600;
+    --text-headline-lg--letter-spacing: -0.01em;
+    --text-headline-md: 20px;
+    --text-headline-md--line-height: 28px;
+    --text-headline-md--font-weight: 600;
+    --text-body-lg: 18px;
+    --text-body-lg--line-height: 28px;
+    --text-body-md: 16px;
+    --text-body-md--line-height: 24px;
+    --text-body-sm: 14px;
+    --text-body-sm--line-height: 20px;
+    --text-label-md: 14px;
+    --text-label-md--line-height: 16px;
+    --text-label-md--font-weight: 600;
+    --text-label-md--letter-spacing: 0.01em;
+    --text-label-sm: 12px;
+    --text-label-sm--line-height: 16px;
+    --text-label-sm--font-weight: 500;
+}
+
+.material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    vertical-align: middle;
+}
+
+.wireframe-pattern {
+    background-image: radial-gradient(#e4e4e7 1px, transparent 1px);
+    background-size: 24px 24px;
+}
