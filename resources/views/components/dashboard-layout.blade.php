@@ -1,5 +1,10 @@
 @props(['title' => 'Dashboard'])
 
+@php
+    $dashboardActive = request()->routeIs('dashboard');
+    $settingsActive = request()->routeIs('dashboard.settings.*');
+@endphp
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -18,14 +23,14 @@
                 <p class="text-label-sm text-on-surface-variant">Admin Console</p>
 
                 <nav class="mt-8 grid gap-1 text-body-sm font-medium">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 rounded bg-secondary-container px-4 py-2.5 font-semibold text-on-secondary-container transition hover:bg-surface-container-high">
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 rounded px-4 py-2.5 transition hover:bg-surface-container-high {{ $dashboardActive ? 'bg-secondary-container font-semibold text-on-secondary-container' : 'text-on-surface-variant' }}">
                         <span class="material-symbols-outlined text-[20px]">dashboard</span>
                         Dashboard
                     </a>
-                    <span class="flex items-center gap-3 rounded px-4 py-2.5 text-on-surface-variant">
+                    <a href="{{ route('dashboard.settings.edit') }}" class="flex items-center gap-3 rounded px-4 py-2.5 transition hover:bg-surface-container-high {{ $settingsActive ? 'bg-secondary-container font-semibold text-on-secondary-container' : 'text-on-surface-variant' }}">
                         <span class="material-symbols-outlined text-[20px]">settings</span>
                         Configuracion
-                    </span>
+                    </a>
                     <span class="flex items-center gap-3 rounded px-4 py-2.5 text-on-surface-variant">
                         <span class="material-symbols-outlined text-[20px]">description</span>
                         Paginas

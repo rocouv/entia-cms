@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Dashboard\SiteSettingsController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,4 +17,9 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+
+    Route::middleware('admin')->group(function () {
+        Route::get('/dashboard/settings', [SiteSettingsController::class, 'edit'])->name('dashboard.settings.edit');
+        Route::put('/dashboard/settings', [SiteSettingsController::class, 'update'])->name('dashboard.settings.update');
+    });
 });
