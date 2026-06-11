@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Dashboard\SiteSettingsController;
+use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,5 +22,9 @@ Route::middleware('auth')->group(function () {
     Route::middleware('admin')->group(function () {
         Route::get('/dashboard/settings', [SiteSettingsController::class, 'edit'])->name('dashboard.settings.edit');
         Route::put('/dashboard/settings', [SiteSettingsController::class, 'update'])->name('dashboard.settings.update');
+
+        Route::resource('/dashboard/users', UserController::class)
+            ->except('show')
+            ->names('dashboard.users');
     });
 });

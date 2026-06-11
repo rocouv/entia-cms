@@ -3,6 +3,7 @@
 @php
     $dashboardActive = request()->routeIs('dashboard');
     $settingsActive = request()->routeIs('dashboard.settings.*');
+    $usersActive = request()->routeIs('dashboard.users.*');
 @endphp
 
 <!DOCTYPE html>
@@ -51,10 +52,10 @@
                         <span class="material-symbols-outlined text-[20px]">business_center</span>
                         Proyectos
                     </span>
-                    <span class="flex items-center gap-3 rounded px-4 py-2.5 text-on-surface-variant">
+                    <a href="{{ route('dashboard.users.index') }}" class="flex items-center gap-3 rounded px-4 py-2.5 transition hover:bg-surface-container-high {{ $usersActive ? 'bg-secondary-container font-semibold text-on-secondary-container' : 'text-on-surface-variant' }}">
                         <span class="material-symbols-outlined text-[20px]">group</span>
                         Usuarios
-                    </span>
+                    </a>
                 </nav>
 
                 <div class="mt-8 border-t border-outline-variant pt-4">
