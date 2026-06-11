@@ -16,7 +16,7 @@
         <div class="border border-outline-variant bg-surface-container-lowest p-6 transition hover:border-primary">
             <span class="material-symbols-outlined text-on-primary-container">description</span>
             <p class="mt-3 text-label-sm uppercase tracking-wider text-on-surface-variant">Paginas</p>
-            <p class="mt-1 text-headline-lg text-primary">Pendiente</p>
+            <p class="mt-1 text-headline-lg text-primary">Activo</p>
         </div>
         <div class="border border-outline-variant bg-surface-container-lowest p-6 transition hover:border-primary">
             <span class="material-symbols-outlined text-on-primary-container">view_quilt</span>
@@ -67,10 +67,10 @@
                     <h2 class="text-headline-md text-primary">Acciones rapidas</h2>
                 </div>
                 <div class="space-y-3 p-6">
-                    <button class="flex h-12 w-full items-center justify-center gap-3 rounded bg-primary text-label-md text-on-primary transition hover:opacity-90">
+                    <a href="{{ route('dashboard.pages.create') }}" class="flex h-12 w-full items-center justify-center gap-3 rounded bg-primary text-label-md text-on-primary transition hover:opacity-90">
                         <span class="material-symbols-outlined text-[20px]">add_circle</span>
                         Nueva pagina
-                    </button>
+                    </a>
                     <a href="{{ route('dashboard.media.create') }}" class="flex h-12 w-full items-center justify-center gap-3 rounded border border-outline-variant bg-surface-container-lowest text-label-md text-primary transition hover:bg-surface-container-low">
                         <span class="material-symbols-outlined text-[20px]">cloud_upload</span>
                         Subir media

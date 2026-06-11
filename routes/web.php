@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Dashboard\MediaController;
+use App\Http\Controllers\Dashboard\PageController;
 use App\Http\Controllers\Dashboard\SiteSettingsController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\DashboardController;
@@ -23,6 +24,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/media/create', [MediaController::class, 'create'])->name('dashboard.media.create');
     Route::post('/dashboard/media', [MediaController::class, 'store'])->name('dashboard.media.store');
     Route::delete('/dashboard/media/{media}', [MediaController::class, 'destroy'])->name('dashboard.media.destroy');
+    Route::resource('/dashboard/pages', PageController::class)
+        ->except('show')
+        ->names('dashboard.pages');
 
     Route::middleware('admin')->group(function () {
         Route::get('/dashboard/settings', [SiteSettingsController::class, 'edit'])->name('dashboard.settings.edit');
