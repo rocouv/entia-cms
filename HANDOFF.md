@@ -7,25 +7,25 @@ Entia CMS esta en la fase administrativa base del MVP. El proyecto usa Laravel 1
 Rama actual:
 
 ```txt
-feat/pages-management
+feat/public-render
 ```
 
 Ultimo commit de feature:
 
 ```txt
-99f3c5c feat: agregar gestion de paginas
+f282a78 feat: agregar render publico con Blade
 ```
 
 Rama remota:
 
 ```txt
-origin/feat/pages-management
+origin/feat/public-render
 ```
 
 Pull request sugerido por GitHub:
 
 ```txt
-https://github.com/rocouv/entia-cms/pull/new/feat/pages-management
+https://github.com/rocouv/entia-cms/pull/new/feat/public-render
 ```
 
 ## Funcionalidades implementadas
@@ -51,10 +51,34 @@ https://github.com/rocouv/entia-cms/pull/new/feat/pages-management
 - El slug se normaliza automaticamente desde el titulo si queda vacio.
 - El slug es unico por sitio.
 - Solo una pagina puede quedar marcada como home por sitio.
+- Secciones dinamicas administrables en `/dashboard/pages/{page}/sections`.
+- Usuarios autenticados del dashboard pueden listar, crear, editar, ocultar/mostrar y eliminar secciones de una pagina.
+- La tabla `sections` guarda `page_id`, `type`, `content` (JSON), `settings` (JSON), `sort_order`, `is_visible` y timestamps.
+- Tipos de seccion soportados: `hero`, `text_block`, `image_text`, `cards`, `gallery`, `services`, `projects`, `contact` y `faq`.
+- El contenido editable se guarda en JSON `content` y la configuracion visual en JSON `settings`.
+- Orden manual con `sort_order` y visibilidad controlada por `is_visible`.
+- Formularios amigables por tipo de seccion en Blade, sin constructor visual ni drag and drop todavia.
+- Render publico en la raiz del sitio (`/` y `/{slug}`).
+- Pagina de inicio (`/`) cargada desde la pagina marcada como `is_home` en la base de datos.
+- Pagina por slug (`/{slug}`) cargada desde `pages` con `is_published = true`.
+- Layout publico en `resources/views/layouts/public.blade.php` con navegacion dinamica desde paginas publicadas con `show_in_navigation = true` y footer con datos del sitio.
+- Navegacion automatica: ordenada por `sort_order`, usa `navigation_label` o `title`, enlace a `/` para la pagina home.
+- Render de secciones por tipo desde `resources/views/sections/`:
+  - `hero`: imagen de fondo opcional, titulo, subtitulo y boton CTA.
+  - `text-block`: titulo y cuerpo de texto.
+  - `image-text`: imagen y texto con posicion izquierda/derecha configurable.
+  - `cards`: grilla de tarjetas con icono, titulo y descripcion.
+  - `gallery`: grilla de imagenes con efecto hover.
+  - `services`: placeholder con enlace al dashboard.
+  - `projects`: placeholder con enlace al dashboard.
+  - `contact`: seccion de contacto con placeholder de formulario.
+  - `faq`: acordeon de preguntas y respuestas.
+- Vista faltante no rompe la pagina; solo muestra mensaje de debug en entorno local.
+- SEO basico: `meta_title` y `meta_description` desde la pagina o configuracion general.
 
 ## Verificaciones recientes
 
-Ejecutadas antes de commitear `feat/pages-management`:
+Ejecutadas antes de commitear `feat/public-render`:
 
 ```bash
 composer test
@@ -64,55 +88,32 @@ npm run build
 
 Resultado:
 
-- `composer test`: 28 tests pasan.
+- `composer test`: 35 tests pasan.
 - `./vendor/bin/pint --test`: pasa.
 - `npm run build`: pasa.
-- `php artisan migrate`: migracion `pages` aplicada localmente.
 
 ## Siguiente paso recomendado
 
-Implementar secciones dinamicas del dashboard.
+Servicios y proyectos.
 
 Objetivo:
 
-- Crear modulo de secciones asociado a paginas.
-- Permitir listar secciones de una pagina.
-- Permitir crear, editar, ocultar/mostrar y eliminar secciones.
-- Soportar orden manual con `sort_order`.
-- Guardar contenido editable en JSON `content` y configuracion visual/comportamiento en JSON `settings`.
-- Empezar con tipos iniciales simples: `hero`, `text_block`, `image_text`, `cards`, `gallery`, `services`, `projects`, `contact` y `faq`.
-- Preparar las vistas Blade futuras para render publico por tipo, sin implementar todavia el render publico completo.
+- Crear modulos de administracion para servicios y proyectos.
+- Cada modulo con listado, creacion, edicion y eliminacion.
+- Render publico en `/servicios` y `/proyectos` con listados.
+- Render publico de detalle en `/servicios/{slug}` y `/proyectos/{slug}`.
+- Categorias para filtrar servicios y proyectos.
 
-Alcance sugerido para el primer corte:
+## Pendientes despues de servicios y proyectos
 
-- Migracion `sections` con `page_id`, `type`, `content`, `settings`, `sort_order`, `is_visible` y timestamps.
-- Modelo `Section` con relacion a `Page`, casts JSON/booleanos y helper para nombre legible del tipo si aporta claridad.
-- Factory `SectionFactory`.
-- Controller simple en `app/Http/Controllers/Dashboard/SectionController.php`.
-- Form Requests para crear y actualizar secciones.
-- Rutas anidadas bajo paginas: `/dashboard/pages/{page}/sections`.
-- Vistas Blade `index`, `create` y `edit` en `resources/views/dashboard/sections`.
-- Formularios simples por tipo usando Blade, sin constructor visual.
-- Tests Feature con Pest para acceso, creacion, edicion, visibilidad, orden, pertenencia a pagina y bloqueo de usuarios no autenticados.
-
-Decisiones para mantener:
-
-- No crear tablas separadas por cada tipo de seccion durante el MVP.
-- No crear constructor visual ni drag and drop todavia.
-- No renderizar secciones publicamente todavia salvo que la feature lo pida explicitamente; primero cerrar administracion.
-- Mantener formularios amigables para usuarios no tecnicos.
-- Mantener compatibilidad SQLite/MySQL y evitar SQL especifico del motor.
-
-## Pendientes despues de secciones
-
-- Render publico con Blade.
 - Servicios y proyectos.
 - Formulario publico de contacto con Resend.
 - Checklist de despliegue con SQLite, backups, storage persistente y SSL.
 
 ## Notas operativas
 
-- `main` remoto ya contiene configuracion general, gestion de usuarios y media.
-- Antes del siguiente modulo, crear rama desde `origin/main` o desde la rama integrada aprobada.
+- `main` remoto ya contiene configuracion general, gestion de usuarios, media, paginas y secciones.
+- `feat/public-render` contiene el render publico con Blade.
+- Antes del siguiente modulo, crear rama desde `main` actualizado o desde la rama integrada aprobada.
 - No commitear `.env`, bases SQLite con datos locales, `vendor`, `node_modules` ni artefactos privados de storage.
 - Si se prueba media localmente, ejecutar `php artisan storage:link` si `public/storage` no existe.
