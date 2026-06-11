@@ -51,4 +51,12 @@ class Site extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    /**
+     * @return HasMany<Media, $this>
+     */
+    public function media(): HasMany
+    {
+        return $this->hasMany(Media::class);
+    }
 }

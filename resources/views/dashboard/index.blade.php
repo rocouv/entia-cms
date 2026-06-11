@@ -71,10 +71,10 @@
                         <span class="material-symbols-outlined text-[20px]">add_circle</span>
                         Nueva pagina
                     </button>
-                    <button class="flex h-12 w-full items-center justify-center gap-3 rounded border border-outline-variant bg-surface-container-lowest text-label-md text-primary transition hover:bg-surface-container-low">
+                    <a href="{{ route('dashboard.media.create') }}" class="flex h-12 w-full items-center justify-center gap-3 rounded border border-outline-variant bg-surface-container-lowest text-label-md text-primary transition hover:bg-surface-container-low">
                         <span class="material-symbols-outlined text-[20px]">cloud_upload</span>
                         Subir media
-                    </button>
+                    </a>
                     <a href="/" class="flex h-12 w-full items-center justify-center gap-3 rounded border border-outline-variant bg-surface-container-lowest text-label-md text-primary transition hover:bg-surface-container-low">
                         <span class="material-symbols-outlined text-[20px]">open_in_new</span>
                         Ver sitio publico
