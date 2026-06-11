@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Dashboard\MediaController;
 use App\Http\Controllers\Dashboard\PageController;
+use App\Http\Controllers\Dashboard\SectionController;
 use App\Http\Controllers\Dashboard\SiteSettingsController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\DashboardController;
@@ -27,6 +28,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('/dashboard/pages', PageController::class)
         ->except('show')
         ->names('dashboard.pages');
+    Route::get('/dashboard/pages/{page}/sections', [SectionController::class, 'index'])->name('dashboard.sections.index');
+    Route::get('/dashboard/pages/{page}/sections/create', [SectionController::class, 'create'])->name('dashboard.sections.create');
+    Route::post('/dashboard/pages/{page}/sections', [SectionController::class, 'store'])->name('dashboard.sections.store');
+    Route::get('/dashboard/pages/{page}/sections/{section}/edit', [SectionController::class, 'edit'])->name('dashboard.sections.edit');
+    Route::put('/dashboard/pages/{page}/sections/{section}', [SectionController::class, 'update'])->name('dashboard.sections.update');
+    Route::delete('/dashboard/pages/{page}/sections/{section}', [SectionController::class, 'destroy'])->name('dashboard.sections.destroy');
 
     Route::middleware('admin')->group(function () {
         Route::get('/dashboard/settings', [SiteSettingsController::class, 'edit'])->name('dashboard.settings.edit');

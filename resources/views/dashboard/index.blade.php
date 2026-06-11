@@ -21,7 +21,7 @@
         <div class="border border-outline-variant bg-surface-container-lowest p-6 transition hover:border-primary">
             <span class="material-symbols-outlined text-on-primary-container">view_quilt</span>
             <p class="mt-3 text-label-sm uppercase tracking-wider text-on-surface-variant">Secciones</p>
-            <p class="mt-1 text-headline-lg text-primary">Pendiente</p>
+            <p class="mt-1 text-headline-lg text-primary">Activo</p>
         </div>
         <div class="border border-outline-variant bg-surface-container-lowest p-6 transition hover:border-primary">
             <span class="material-symbols-outlined text-on-primary-container">image</span>
