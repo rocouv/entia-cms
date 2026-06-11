@@ -16,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        View::composer('layouts.public', function ($view) {
+        View::composer('components.layouts.public', function ($view) {
             $view->with('siteSettings', SiteSetting::first());
             $view->with('navigationPages', Page::where('is_published', true)
                 ->where('show_in_navigation', true)

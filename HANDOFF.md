@@ -13,7 +13,7 @@ feat/public-render
 Ultimo commit de feature:
 
 ```txt
-f282a78 feat: agregar render publico con Blade
+0a7408a chore: limpiar referencias MVP del dashboard
 ```
 
 Rama remota:
@@ -22,10 +22,10 @@ Rama remota:
 origin/feat/public-render
 ```
 
-Pull request sugerido por GitHub:
+Pull request:
 
 ```txt
-https://github.com/rocouv/entia-cms/pull/new/feat/public-render
+https://github.com/rocouv/entia-cms/pull/7
 ```
 
 ## Funcionalidades implementadas
@@ -75,6 +75,7 @@ https://github.com/rocouv/entia-cms/pull/new/feat/public-render
   - `faq`: acordeon de preguntas y respuestas.
 - Vista faltante no rompe la pagina; solo muestra mensaje de debug en entorno local.
 - SEO basico: `meta_title` y `meta_description` desde la pagina o configuracion general.
+- Limpieza de dashboard: eliminadas referencias internas de desarrollo (MVP, semanas, roadmap, notas tecnicas) y reemplazadas con descripciones orientadas al usuario final. Indicadores reemplazados por conteos reales de contenido.
 
 ## Verificaciones recientes
 

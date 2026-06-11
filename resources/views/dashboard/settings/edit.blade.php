@@ -1,9 +1,8 @@
 <x-dashboard-layout title="Configuracion">
     <section class="mb-8">
-        <p class="text-label-sm uppercase tracking-[0.2em] text-on-surface-variant">Semana 2</p>
         <h1 class="mt-2 text-headline-lg text-primary">Configuracion general del sitio</h1>
         <p class="mt-2 max-w-2xl text-body-md text-on-surface-variant">
-            Administra los datos base del cliente, el sitio y la informacion publica principal. Esta pantalla solo esta disponible para administradores.
+            Administra los datos del cliente, del sitio y la informacion publica principal.
         </p>
     </section>
 
@@ -21,7 +20,7 @@
             <section class="border border-outline-variant bg-surface-container-lowest">
                 <div class="border-b border-outline-variant bg-surface-container-low px-6 py-4">
                     <h2 class="text-headline-md text-primary">Datos del cliente</h2>
-                    <p class="mt-1 text-body-sm text-on-surface-variant">Informacion interna de la instalacion monositio.</p>
+                    <p class="mt-1 text-body-sm text-on-surface-variant">Datos del cliente propietario de esta instalacion.</p>
                 </div>
 
                 <div class="grid gap-5 p-6 sm:grid-cols-2">
@@ -54,7 +53,7 @@
             <section class="border border-outline-variant bg-surface-container-lowest">
                 <div class="border-b border-outline-variant bg-surface-container-low px-6 py-4">
                     <h2 class="text-headline-md text-primary">Datos del sitio</h2>
-                    <p class="mt-1 text-body-sm text-on-surface-variant">El dominio se guarda como referencia, no como resolucion multisitio.</p>
+                    <p class="mt-1 text-body-sm text-on-surface-variant">Nombre y dominio publico del sitio.</p>
                 </div>
 
                 <div class="grid gap-5 p-6 sm:grid-cols-2">
@@ -86,7 +85,7 @@
             <section class="border border-outline-variant bg-surface-container-lowest">
                 <div class="border-b border-outline-variant bg-surface-container-low px-6 py-4">
                     <h2 class="text-headline-md text-primary">Contacto y SEO</h2>
-                    <p class="mt-1 text-body-sm text-on-surface-variant">Datos generales que usaran futuras vistas publicas y formularios.</p>
+                    <p class="mt-1 text-body-sm text-on-surface-variant">Informacion de contacto y configuracion SEO del sitio.</p>
                 </div>
 
                 <div class="grid gap-5 p-6 sm:grid-cols-2">
@@ -148,7 +147,7 @@
                     <span class="material-symbols-outlined text-[18px]">save</span>
                     Guardar configuracion
                 </button>
-                <p class="mt-4 text-body-sm text-on-surface-variant">Los cambios quedan listos para usarse en el render publico y modulos posteriores.</p>
+                <p class="mt-4 text-body-sm text-on-surface-variant">Los cambios se reflejan automaticamente en el sitio publico.</p>
             </div>
         </aside>
     </form>

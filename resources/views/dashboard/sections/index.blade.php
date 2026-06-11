@@ -4,7 +4,7 @@
             <p class="text-label-sm uppercase tracking-[0.2em] text-on-surface-variant">{{ $page->title }}</p>
             <h1 class="mt-2 text-headline-lg text-primary">Secciones</h1>
             <p class="mt-2 max-w-2xl text-body-md text-on-surface-variant">
-                Organiza los bloques editables de la pagina. El render publico se implementara despues.
+                Organiza los bloques de contenido de la pagina. El orden determina como se muestran en el sitio.
             </p>
         </div>
 

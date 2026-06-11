@@ -1,10 +1,9 @@
 <x-dashboard-layout title="Media">
     <section class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-            <p class="text-label-sm uppercase tracking-[0.2em] text-on-surface-variant">Semana 2</p>
             <h1 class="mt-2 text-headline-lg text-primary">Media</h1>
             <p class="mt-2 max-w-2xl text-body-md text-on-surface-variant">
-                Sube y administra archivos que despues podran usarse en paginas, secciones, servicios y proyectos.
+                Sube y administra imagenes y PDFs para usarlos en el contenido del sitio.
             </p>
         </div>
 
@@ -23,7 +22,7 @@
     <section class="border border-outline-variant bg-surface-container-lowest">
         <div class="border-b border-outline-variant bg-surface-container-low px-6 py-4">
             <h2 class="text-headline-md text-primary">Biblioteca</h2>
-            <p class="mt-1 text-body-sm text-on-surface-variant">Archivos guardados en el disco publico de Laravel.</p>
+            <p class="mt-1 text-body-sm text-on-surface-variant">Archivos disponibles para usar en paginas y secciones.</p>
         </div>
 
         @if ($media->isNotEmpty())

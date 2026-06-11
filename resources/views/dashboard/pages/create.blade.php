@@ -3,7 +3,7 @@
         <p class="text-label-sm uppercase tracking-[0.2em] text-on-surface-variant">Paginas</p>
         <h1 class="mt-2 text-headline-lg text-primary">Crear pagina</h1>
         <p class="mt-2 max-w-2xl text-body-md text-on-surface-variant">
-            Define la informacion editorial y SEO basica. Las secciones visuales se agregaran despues.
+            Define la informacion editorial y SEO basica. Despues puedes agregar secciones a la pagina.
         </p>
     </section>
 
