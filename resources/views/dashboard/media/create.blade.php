@@ -3,7 +3,7 @@
         <p class="text-label-sm uppercase tracking-[0.2em] text-on-surface-variant">Media</p>
         <h1 class="mt-2 text-headline-lg text-primary">Subir archivo</h1>
         <p class="mt-2 max-w-2xl text-body-md text-on-surface-variant">
-            Usa archivos ligeros y descriptivos. Este MVP acepta imagenes y PDFs de hasta 5 MB.
+            Sube imagenes y PDFs para usarlos en paginas, secciones y contenido del sitio.
         </p>
     </section>
 
@@ -13,7 +13,6 @@
         <section class="border border-outline-variant bg-surface-container-lowest lg:col-span-2">
             <div class="border-b border-outline-variant bg-surface-container-low px-6 py-4">
                 <h2 class="text-headline-md text-primary">Archivo</h2>
-                <p class="mt-1 text-body-sm text-on-surface-variant">El archivo se guardara en `storage/app/public/media`.</p>
             </div>
 
             <div class="grid gap-5 p-6">
@@ -35,9 +34,9 @@
             <div class="border border-outline-variant bg-surface-container-lowest p-6">
                 <p class="text-label-sm uppercase tracking-wider text-on-surface-variant">Formatos</p>
                 <ul class="mt-4 space-y-2 text-body-sm text-on-surface-variant">
-                    <li>JPG, PNG, WebP o GIF</li>
+                    <li>JPG, PNG, WebP, GIF</li>
                     <li>PDF</li>
-                    <li>Maximo 5 MB</li>
+                    <li>Maximo 5 MB por archivo</li>
                 </ul>
             </div>
 

@@ -4,7 +4,7 @@
             <p class="text-label-sm uppercase tracking-[0.2em] text-on-surface-variant">Contenido</p>
             <h1 class="mt-2 text-headline-lg text-primary">Paginas</h1>
             <p class="mt-2 max-w-2xl text-body-md text-on-surface-variant">
-                Administra las paginas base del sitio. Las secciones dinamicas se agregaran en el siguiente modulo.
+                Crea y administra las paginas del sitio. Cada pagina puede tener sus propias secciones.
             </p>
         </div>
 

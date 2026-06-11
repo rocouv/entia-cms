@@ -14,7 +14,7 @@
         <section class="border border-outline-variant bg-surface-container-lowest lg:col-span-2">
             <div class="border-b border-outline-variant bg-surface-container-low px-6 py-4">
                 <h2 class="text-headline-md text-primary">Datos de acceso</h2>
-                <p class="mt-1 text-body-sm text-on-surface-variant">El rol se muestra como referencia y no se modifica desde esta pantalla.</p>
+                <p class="mt-1 text-body-sm text-on-surface-variant">El rol se asigna al crear el usuario y no se modifica desde esta pantalla.</p>
             </div>
 
             <div class="grid gap-5 p-6 sm:grid-cols-2">
@@ -47,7 +47,7 @@
             <div class="border border-outline-variant bg-surface-container-lowest p-6">
                 <p class="text-label-sm uppercase tracking-wider text-on-surface-variant">Rol</p>
                 <p class="mt-2 text-headline-md text-primary">{{ $user->role->name }}</p>
-                <p class="mt-3 text-body-sm text-on-surface-variant">La gestion de roles avanzados queda fuera del MVP.</p>
+                <p class="mt-3 text-body-sm text-on-surface-variant">Los usuarios pueden ser administradores o editores.</p>
             </div>
 
             <div class="border border-outline-variant bg-surface-container-lowest p-6">
