@@ -2,23 +2,27 @@
 
 namespace App\Providers;
 
+use App\Models\Page;
+use App\Models\SiteSetting;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-        //
+        View::composer('layouts.public', function ($view) {
+            $view->with('siteSettings', SiteSetting::first());
+            $view->with('navigationPages', Page::where('is_published', true)
+                ->where('show_in_navigation', true)
+                ->orderBy('sort_order')
+                ->get()
+            );
+        });
     }
 }
