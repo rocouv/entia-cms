@@ -13,7 +13,7 @@ feat/public-render
 Ultimo commit de feature:
 
 ```txt
-d1dad07 feat: agregar render publico con Blade
+0a7408a chore: limpiar referencias MVP del dashboard
 ```
 
 Rama remota:
@@ -22,10 +22,10 @@ Rama remota:
 origin/feat/public-render
 ```
 
-Pull request sugerido por GitHub:
+Pull request:
 
 ```txt
-https://github.com/rocouv/entia-cms/pull/new/feat/public-render
+https://github.com/rocouv/entia-cms/pull/7
 ```
 
 ## Funcionalidades implementadas
