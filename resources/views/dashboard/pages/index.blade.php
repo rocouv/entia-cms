@@ -60,6 +60,9 @@
                                     <a href="{{ route('dashboard.pages.edit', $page) }}" class="inline-flex h-9 items-center justify-center rounded border border-outline-variant px-3 text-label-md text-primary transition hover:bg-surface-container-low">
                                         Editar
                                     </a>
+                                    <a href="{{ route('dashboard.sections.index', $page) }}" class="inline-flex h-9 items-center justify-center rounded border border-outline-variant px-3 text-label-md text-primary transition hover:bg-surface-container-low">
+                                        Secciones
+                                    </a>
                                     <form method="POST" action="{{ route('dashboard.pages.destroy', $page) }}">
                                         @csrf
                                         @method('DELETE')

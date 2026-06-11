@@ -4,6 +4,7 @@
     $dashboardActive = request()->routeIs('dashboard');
     $settingsActive = request()->routeIs('dashboard.settings.*');
     $pagesActive = request()->routeIs('dashboard.pages.*');
+    $sectionsActive = request()->routeIs('dashboard.sections.*');
     $mediaActive = request()->routeIs('dashboard.media.*');
     $usersActive = request()->routeIs('dashboard.users.*');
 @endphp
@@ -38,10 +39,10 @@
                         <span class="material-symbols-outlined text-[20px]">description</span>
                         Paginas
                     </a>
-                    <span class="flex items-center gap-3 rounded px-4 py-2.5 text-on-surface-variant">
+                    <a href="{{ route('dashboard.pages.index') }}" class="flex items-center gap-3 rounded px-4 py-2.5 transition hover:bg-surface-container-high {{ $sectionsActive ? 'bg-secondary-container font-semibold text-on-secondary-container' : 'text-on-surface-variant' }}">
                         <span class="material-symbols-outlined text-[20px]">view_quilt</span>
                         Secciones
-                    </span>
+                    </a>
                     <a href="{{ route('dashboard.media.index') }}" class="flex items-center gap-3 rounded px-4 py-2.5 transition hover:bg-surface-container-high {{ $mediaActive ? 'bg-secondary-container font-semibold text-on-secondary-container' : 'text-on-surface-variant' }}">
                         <span class="material-symbols-outlined text-[20px]">image</span>
                         Media
