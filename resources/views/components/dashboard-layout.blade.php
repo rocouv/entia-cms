@@ -1,4 +1,4 @@
-@props(['title' => 'Dashboard'])
+@props(['title' => 'Dashboard', 'breadcrumbs' => []])
 
 @php
     $dashboardActive = request()->routeIs('dashboard');
@@ -72,7 +72,26 @@
             <div class="flex-1 lg:ml-[260px]">
                 <header class="sticky top-0 z-30 flex min-h-16 flex-col gap-4 border-b border-outline-variant bg-surface px-6 py-4 sm:flex-row sm:items-center sm:justify-between lg:h-16 lg:py-0">
                     <div>
-                        <p class="text-label-sm text-on-surface-variant">Admin / <span class="font-bold text-primary">{{ $title }}</span></p>
+                        <nav aria-label="Breadcrumb" class="flex flex-wrap items-center gap-2 text-label-sm text-on-surface-variant">
+                            @if($dashboardActive && empty($breadcrumbs))
+                                <span class="font-bold text-primary">Dashboard</span>
+                            @else
+                                <a href="{{ route('dashboard') }}" class="transition hover:text-primary">Dashboard</a>
+                            @endif
+                            @forelse($breadcrumbs as $breadcrumb)
+                                <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                                @if(($breadcrumb['url'] ?? null) && ! $loop->last)
+                                    <a href="{{ $breadcrumb['url'] }}" class="transition hover:text-primary">{{ $breadcrumb['label'] }}</a>
+                                @else
+                                    <span class="font-bold text-primary">{{ $breadcrumb['label'] }}</span>
+                                @endif
+                            @empty
+                                @unless($dashboardActive)
+                                    <span class="material-symbols-outlined text-[16px]">chevron_right</span>
+                                    <span class="font-bold text-primary">{{ $title }}</span>
+                                @endunless
+                            @endforelse
+                        </nav>
                         <p class="text-body-sm text-on-surface-variant">Sesion activa como {{ auth()->user()->name }}</p>
                     </div>
 

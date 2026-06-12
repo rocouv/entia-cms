@@ -1,4 +1,7 @@
-<x-dashboard-layout title="Subir media">
+<x-dashboard-layout title="Subir media" :breadcrumbs="[
+    ['label' => 'Media', 'url' => route('dashboard.media.index')],
+    ['label' => 'Subir archivo'],
+]">
     <section class="mb-8">
         <p class="text-label-sm uppercase tracking-[0.2em] text-on-surface-variant">Media</p>
         <h1 class="mt-2 text-headline-lg text-primary">Subir archivo</h1>

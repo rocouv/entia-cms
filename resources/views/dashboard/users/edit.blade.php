@@ -1,4 +1,7 @@
-<x-dashboard-layout title="Editar usuario">
+<x-dashboard-layout title="Editar usuario" :breadcrumbs="[
+    ['label' => 'Usuarios', 'url' => route('dashboard.users.index')],
+    ['label' => $user->name],
+]">
     <section class="mb-8">
         <p class="text-label-sm uppercase tracking-[0.2em] text-on-surface-variant">Usuarios</p>
         <h1 class="mt-2 text-headline-lg text-primary">Editar usuario</h1>

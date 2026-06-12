@@ -1,4 +1,7 @@
-<x-dashboard-layout title="Nuevo editor">
+<x-dashboard-layout title="Nuevo editor" :breadcrumbs="[
+    ['label' => 'Usuarios', 'url' => route('dashboard.users.index')],
+    ['label' => 'Nuevo editor'],
+]">
     <section class="mb-8">
         <p class="text-label-sm uppercase tracking-[0.2em] text-on-surface-variant">Usuarios</p>
         <h1 class="mt-2 text-headline-lg text-primary">Crear editor</h1>
