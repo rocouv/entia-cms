@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Client;
 use App\Models\Site;
+use App\Models\SiteSetting;
 use Illuminate\Database\Seeder;
 
 class SiteSeeder extends Seeder
@@ -42,6 +43,7 @@ class SiteSeeder extends Seeder
                 'meta_title' => env('ENTIA_SITE_META_TITLE', env('ENTIA_SITE_NAME', 'Entia')),
                 'meta_description' => env('ENTIA_SITE_META_DESCRIPTION'),
                 'social_links' => [],
+                'theme' => SiteSetting::THEME_DEFAULTS,
             ],
         );
     }

@@ -91,3 +91,63 @@ it('allows administrators to update site settings', function () {
         ->contact_email->toBe('hola@cliente.test')
         ->meta_title->toBe('Sitio Demo');
 });
+
+it('allows administrators to update the visual theme', function () {
+    $admin = createSettingsUser(Role::ADMINISTRADOR);
+
+    $this->actingAs($admin)
+        ->put('/dashboard/settings', [
+            'client_name' => 'Diseno Vector',
+            'client_legal_name' => null,
+            'client_contact_email' => null,
+            'client_contact_phone' => null,
+            'site_name' => 'Diseno Vector',
+            'domain' => 'disenovector.test',
+            'is_active' => '1',
+            'tagline' => 'Diseno grafico, impresion y soluciones visuales',
+            'contact_email' => null,
+            'contact_phone' => null,
+            'address' => null,
+            'meta_title' => 'Diseno Vector',
+            'meta_description' => null,
+            'theme' => [
+                'font_family' => 'Montserrat',
+                'background' => '#FFFFFF',
+                'surface' => '#FFFFFF',
+                'surface_container_lowest' => '#FFFFFF',
+                'surface_container_low' => '#FFFFFF',
+                'surface_container' => '#FFFFFF',
+                'surface_container_high' => '#232323',
+                'surface_container_highest' => '#232323',
+                'on_surface' => '#232323',
+                'on_surface_variant' => '#5E0608',
+                'outline' => '#232323',
+                'outline_variant' => '#E31B23',
+                'primary' => '#E31B23',
+                'on_primary' => '#FFFFFF',
+                'primary_container' => '#B81414',
+                'on_primary_container' => '#FFFFFF',
+                'secondary' => '#232323',
+                'on_secondary' => '#FFFFFF',
+                'secondary_container' => '#5E0608',
+                'on_secondary_container' => '#FFFFFF',
+                'tertiary' => '#000000',
+                'on_tertiary' => '#FFFFFF',
+                'tertiary_container' => '#5E0608',
+                'on_tertiary_container' => '#FFFFFF',
+                'error' => '#E31B23',
+                'on_error' => '#FFFFFF',
+                'error_container' => '#B81414',
+                'on_error_container' => '#FFFFFF',
+            ],
+        ])
+        ->assertRedirect('/dashboard/settings');
+
+    $theme = $admin->site->settings->fresh()->theme;
+
+    expect($theme['font_family'])->toBe('Montserrat')
+        ->and($theme['primary'])->toBe('#E31B23')
+        ->and($theme['primary_container'])->toBe('#B81414')
+        ->and($theme['secondary'])->toBe('#232323')
+        ->and($theme['on_surface'])->toBe('#232323');
+});

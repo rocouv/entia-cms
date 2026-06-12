@@ -120,6 +120,95 @@
                     </label>
                 </div>
             </section>
+
+            @php
+                $themeDefaults = \App\Models\SiteSetting::THEME_DEFAULTS;
+                $theme = array_replace($themeDefaults, $site->settings->theme ?? []);
+                $themeGroups = [
+                    'Marca' => [
+                        'primary' => 'Color principal',
+                        'on_primary' => 'Texto sobre principal',
+                        'primary_container' => 'Fondo destacado',
+                        'on_primary_container' => 'Texto sobre destacado',
+                    ],
+                    'Secundarios' => [
+                        'secondary' => 'Color secundario',
+                        'on_secondary' => 'Texto sobre secundario',
+                        'secondary_container' => 'Fondo de etiquetas',
+                        'on_secondary_container' => 'Texto sobre etiquetas',
+                        'tertiary' => 'Color terciario',
+                        'on_tertiary' => 'Texto sobre terciario',
+                    ],
+                    'Superficies' => [
+                        'background' => 'Fondo general',
+                        'surface' => 'Superficie base',
+                        'surface_container_lowest' => 'Contenedor blanco',
+                        'surface_container_low' => 'Contenedor bajo',
+                        'surface_container' => 'Contenedor medio',
+                        'surface_container_high' => 'Contenedor alto',
+                        'surface_container_highest' => 'Contenedor maximo',
+                    ],
+                    'Texto y bordes' => [
+                        'on_surface' => 'Texto principal',
+                        'on_surface_variant' => 'Texto secundario',
+                        'outline' => 'Borde principal',
+                        'outline_variant' => 'Borde sutil',
+                    ],
+                    'Errores' => [
+                        'error' => 'Color de error',
+                        'on_error' => 'Texto sobre error',
+                        'error_container' => 'Fondo de error',
+                        'on_error_container' => 'Texto sobre fondo de error',
+                    ],
+                ];
+            @endphp
+
+            <section class="border border-outline-variant bg-surface-container-lowest">
+                <div class="border-b border-outline-variant bg-surface-container-low px-6 py-4">
+                    <h2 class="text-headline-md text-primary">Tema visual</h2>
+                    <p class="mt-1 text-body-sm text-on-surface-variant">Personaliza colores y tipografia del sitio publico y dashboard.</p>
+                </div>
+
+                <div class="space-y-8 p-6">
+                    <label class="grid gap-2">
+                        <span class="text-label-md text-on-surface">Tipografia principal</span>
+                        <select name="theme[font_family]" class="h-10 rounded border border-outline-variant bg-surface px-3 text-body-md outline-none transition focus:border-primary">
+                            @foreach(\App\Models\SiteSetting::FONT_FAMILIES as $fontFamily => $fontUrl)
+                                <option value="{{ $fontFamily }}" @selected(old('theme.font_family', $theme['font_family']) === $fontFamily)>{{ $fontFamily }}</option>
+                            @endforeach
+                        </select>
+                        @error('theme.font_family') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
+                    </label>
+
+                    @foreach($themeGroups as $groupTitle => $fields)
+                        <div>
+                            <h3 class="text-label-sm uppercase tracking-wider text-on-surface-variant">{{ $groupTitle }}</h3>
+                            <div class="mt-4 grid gap-5 sm:grid-cols-2">
+                                @foreach($fields as $key => $label)
+                                    <label class="grid gap-2">
+                                        <span class="text-label-md text-on-surface">{{ $label }}</span>
+                                        <div class="flex items-center gap-3 rounded border border-outline-variant bg-surface px-3 py-2">
+                                            <input type="color" name="theme[{{ $key }}]" value="{{ old('theme.'.$key, $theme[$key]) }}" class="h-8 w-10 rounded border border-outline-variant bg-transparent p-0">
+                                            <span class="text-body-sm text-on-surface-variant">{{ old('theme.'.$key, $theme[$key]) }}</span>
+                                        </div>
+                                        @error('theme.'.$key) <span class="text-body-sm text-error">{{ $message }}</span> @enderror
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endforeach
+
+                    <div class="rounded border border-outline-variant bg-surface p-6">
+                        <p class="text-label-sm uppercase tracking-wider text-on-surface-variant">Vista previa</p>
+                        <div class="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+                            <span class="inline-flex h-10 items-center justify-center rounded bg-primary px-5 text-label-md text-on-primary">Boton principal</span>
+                            <span class="inline-flex rounded bg-secondary-container px-3 py-1 text-label-sm text-on-secondary-container">Etiqueta</span>
+                            <span class="text-body-md text-on-surface">Texto principal</span>
+                            <span class="text-body-md text-on-surface-variant">Texto secundario</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
 
         <aside class="space-y-6">

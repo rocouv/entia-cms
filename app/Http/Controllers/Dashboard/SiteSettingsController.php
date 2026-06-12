@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\UpdateSiteSettingsRequest;
 use App\Models\Site;
+use App\Models\SiteSetting;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -43,6 +44,7 @@ class SiteSettingsController extends Controller
             'address' => $validated['address'],
             'meta_title' => $validated['meta_title'],
             'meta_description' => $validated['meta_description'],
+            'theme' => $this->themeFrom($site->settings->theme ?? [], $validated['theme'] ?? []),
         ]);
 
         return to_route('dashboard.settings.edit')->with('status', 'Configuracion del sitio actualizada.');
@@ -53,5 +55,18 @@ class SiteSettingsController extends Controller
         return Site::query()
             ->with(['client', 'settings'])
             ->firstOrFail();
+    }
+
+    /**
+     * @param  array<string, string>  $current
+     * @param  array<string, string>  $validated
+     * @return array<string, string>
+     */
+    private function themeFrom(array $current, array $validated): array
+    {
+        return array_intersect_key(
+            array_replace(SiteSetting::THEME_DEFAULTS, $current, $validated),
+            SiteSetting::THEME_DEFAULTS,
+        );
     }
 }
