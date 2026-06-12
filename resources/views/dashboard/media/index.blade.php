@@ -1,4 +1,6 @@
-<x-dashboard-layout title="Media">
+<x-dashboard-layout title="Media" :breadcrumbs="[
+    ['label' => 'Media'],
+]">
     <section class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
             <h1 class="mt-2 text-headline-lg text-primary">Media</h1>

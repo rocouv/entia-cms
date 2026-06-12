@@ -98,11 +98,7 @@ class SectionController extends Controller
      */
     private function contentFrom(array $validated, callable $boolean): array
     {
-        $items = collect(preg_split('/\r\n|\r|\n/', (string) ($validated['items_text'] ?? '')))
-            ->map(fn (string $item): string => trim($item))
-            ->filter()
-            ->values()
-            ->all();
+        $items = $this->itemsFrom($validated['type'], $validated['items_text'] ?? null);
 
         return array_filter([
             'title' => $validated['content_title'] ?? null,
@@ -117,6 +113,76 @@ class SectionController extends Controller
             'limit' => isset($validated['limit']) ? (int) $validated['limit'] : null,
             'show_form' => $boolean('show_form'),
         ], fn (mixed $value): bool => $value !== null && $value !== [] && $value !== '');
+    }
+
+    /**
+     * @return array<int, mixed>
+     */
+    private function itemsFrom(string $type, ?string $itemsText): array
+    {
+        return collect(preg_split('/\r\n|\r|\n/', (string) $itemsText))
+            ->map(fn (string $item): string => trim($item))
+            ->filter()
+            ->map(fn (string $item): mixed => match ($type) {
+                'cards' => $this->cardItemFrom($item),
+                'faq' => $this->faqItemFrom($item),
+                'gallery' => $this->galleryItemFrom($item),
+                default => $item,
+            })
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @return array<string, string>|string
+     */
+    private function cardItemFrom(string $item): array|string
+    {
+        if (! str_contains($item, '|')) {
+            return $item;
+        }
+
+        [$icon, $title, $description] = array_pad(array_map('trim', explode('|', $item, 3)), 3, null);
+
+        return array_filter([
+            'icon' => $icon,
+            'title' => $title,
+            'description' => $description,
+        ], fn (?string $value): bool => filled($value));
+    }
+
+    /**
+     * @return array<string, string>|string
+     */
+    private function faqItemFrom(string $item): array|string
+    {
+        if (! str_contains($item, '|')) {
+            return $item;
+        }
+
+        [$question, $answer] = array_pad(array_map('trim', explode('|', $item, 2)), 2, null);
+
+        return array_filter([
+            'question' => $question,
+            'answer' => $answer,
+        ], fn (?string $value): bool => filled($value));
+    }
+
+    /**
+     * @return array<string, string>|string
+     */
+    private function galleryItemFrom(string $item): array|string
+    {
+        if (! str_contains($item, '|')) {
+            return $item;
+        }
+
+        [$url, $alt] = array_pad(array_map('trim', explode('|', $item, 2)), 2, null);
+
+        return array_filter([
+            'url' => $url,
+            'alt' => $alt,
+        ], fn (?string $value): bool => filled($value));
     }
 
     private function siteFor(User $user): Site

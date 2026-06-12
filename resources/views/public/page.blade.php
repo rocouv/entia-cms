@@ -6,7 +6,7 @@
 <x-layouts.public :title="$metaTitle" :meta-description="$metaDescription">
     @if($page->excerpt)
         <section class="bg-surface-container-lowest py-3xl text-center">
-            <div class="mx-auto max-w-3xl px-6">
+            <div class="mx-auto max-w-5xl px-6">
                 <p class="text-body-lg text-on-surface-variant">{{ $page->excerpt }}</p>
             </div>
         </section>

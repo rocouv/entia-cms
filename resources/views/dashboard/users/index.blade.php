@@ -1,7 +1,8 @@
-<x-dashboard-layout title="Usuarios">
+<x-dashboard-layout title="Usuarios" :breadcrumbs="[
+    ['label' => 'Usuarios'],
+]">
     <section class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-            <p class="text-label-sm uppercase tracking-[0.2em] text-on-surface-variant">Semana 2</p>
             <h1 class="mt-2 text-headline-lg text-primary">Usuarios del dashboard</h1>
             <p class="mt-2 max-w-2xl text-body-md text-on-surface-variant">
                 Gestiona los editores que pueden acceder al panel y preparar contenido del sitio.

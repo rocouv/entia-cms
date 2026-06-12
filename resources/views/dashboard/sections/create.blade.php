@@ -75,7 +75,7 @@
 
                     <label class="grid gap-2 sm:col-span-2">
                         <span class="text-label-md text-on-surface">Items</span>
-                        <textarea name="items_text" rows="5" placeholder="Un item por linea" class="rounded border border-outline-variant bg-surface px-3 py-2 text-body-md outline-none transition focus:border-primary">{{ old('items_text') }}</textarea>
+                        <textarea name="items_text" rows="5" placeholder="Cards: icon|titulo|descripcion. FAQ: pregunta|respuesta. Galeria: ruta|alt." class="rounded border border-outline-variant bg-surface px-3 py-2 text-body-md outline-none transition focus:border-primary">{{ old('items_text') }}</textarea>
                         @error('items_text') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
                     </label>
                 </div>

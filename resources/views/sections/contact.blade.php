@@ -1,5 +1,5 @@
 <section class="bg-{{ $settings['background_color'] ?? 'surface-container-lowest' }} py-3xl">
-    <div class="mx-auto max-w-3xl px-6 text-center">
+    <div class="mx-auto max-w-5xl px-6 text-center">
         @if($content['title'] ?? false)
             <h2 class="text-headline-lg font-bold">{{ $content['title'] }}</h2>
         @endif

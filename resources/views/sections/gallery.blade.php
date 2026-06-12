@@ -6,8 +6,12 @@
         @if($content['images'] ?? false)
             <div class="mt-10 grid gap-6 md:grid-cols-3">
                 @foreach($content['images'] as $image)
+                    @php
+                        $imageUrl = is_array($image) ? ($image['url'] ?? '') : $image;
+                        $imageAlt = is_array($image) ? ($image['alt'] ?? '') : '';
+                    @endphp
                     <div class="overflow-hidden rounded-xl shadow-sm">
-                        <img src="{{ asset('storage/' . ($image['url'] ?? $image)) }}" alt="{{ $image['alt'] ?? '' }}" class="h-64 w-full object-cover transition duration-300 hover:scale-105">
+                        <img src="{{ asset('storage/' . $imageUrl) }}" alt="{{ $imageAlt }}" class="h-64 w-full object-cover transition duration-300 hover:scale-105">
                     </div>
                 @endforeach
             </div>

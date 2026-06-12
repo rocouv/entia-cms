@@ -1,7 +1,22 @@
 @php
     $content = $section->content ?? [];
     $settings = $section->settings ?? [];
-    $itemsText = implode("\n", data_get($content, 'items', []));
+    $itemsText = collect(data_get($content, 'items', []))
+        ->map(function ($item) use ($section) {
+            if (! is_array($item)) {
+                return $item;
+            }
+
+            return match ($section->type) {
+                'cards' => ($item['description'] ?? false)
+                    ? implode('|', [$item['icon'] ?? '', $item['title'] ?? '', $item['description']])
+                    : ($item['title'] ?? ''),
+                'faq' => implode('|', [$item['question'] ?? '', $item['answer'] ?? '']),
+                'gallery' => implode('|', [$item['url'] ?? '', $item['alt'] ?? '']),
+                default => json_encode($item),
+            };
+        })
+        ->implode("\n");
 @endphp
 
 <x-dashboard-layout title="Editar seccion">
@@ -82,7 +97,7 @@
 
                     <label class="grid gap-2 sm:col-span-2">
                         <span class="text-label-md text-on-surface">Items</span>
-                        <textarea name="items_text" rows="5" placeholder="Un item por linea" class="rounded border border-outline-variant bg-surface px-3 py-2 text-body-md outline-none transition focus:border-primary">{{ old('items_text', $itemsText) }}</textarea>
+                        <textarea name="items_text" rows="5" placeholder="Cards: icon|titulo|descripcion. FAQ: pregunta|respuesta. Galeria: ruta|alt." class="rounded border border-outline-variant bg-surface px-3 py-2 text-body-md outline-none transition focus:border-primary">{{ old('items_text', $itemsText) }}</textarea>
                         @error('items_text') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
                     </label>
                 </div>
