@@ -28,6 +28,7 @@ class SiteSettingFactory extends Factory
             'meta_title' => fake()->sentence(4),
             'meta_description' => fake()->sentence(12),
             'social_links' => [],
+            'theme' => SiteSetting::THEME_DEFAULTS,
         ];
     }
 }

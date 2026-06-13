@@ -24,5 +24,9 @@ class AppServiceProvider extends ServiceProvider
                 ->get()
             );
         });
+
+        View::composer('components.dashboard-layout', function ($view): void {
+            $view->with('siteSettings', SiteSetting::first());
+        });
     }
 }
