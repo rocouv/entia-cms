@@ -37,7 +37,7 @@ feat/theme-settings sincronizada con origin/feat/theme-settings antes de esta ac
 Pull request:
 
 ```txt
-https://github.com/rocouv/entia-cms/pull/new/feat/theme-settings
+https://github.com/rocouv/entia-cms/pull/11
 ```
 
 ## Funcionalidades implementadas
@@ -175,6 +175,7 @@ Objetivo:
 - `feat/theme-settings` contiene configuracion visual de colores/tipografia y fue subido al remoto con commit `a1b0c25`.
 - `feat: agregar formularios por tipo de seccion` agrega formularios especificos por tipo y selector basico de media para galeria con commit `961969c`.
 - `319d6cf docs: actualizar handoff de secciones` ya estaba sincronizado con `origin/feat/theme-settings` antes de esta actualizacion documental.
+- Pull request activo de `feat/theme-settings` hacia `main`: https://github.com/rocouv/entia-cms/pull/11
 - Antes del siguiente modulo, crear rama desde la rama integrada aprobada. Si `feat/theme-settings` aun no fue mergeada, la siguiente rama puede partir de ella para conservar el sistema visual.
 - No commitear `.env`, bases SQLite con datos locales, `vendor`, `node_modules` ni artefactos privados de storage.
 - Si se prueba media localmente, ejecutar `php artisan storage:link` si `public/storage` no existe.
