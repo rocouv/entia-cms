@@ -19,25 +19,25 @@ Ultimo commit base remoto:
 Estado del modulo actual:
 
 ```txt
-Servicios, proyectos y categorias implementados localmente en feat/services-projects, pendientes de commit/push/PR.
+Servicios, proyectos y categorias implementados, commiteados y subidos en feat/services-projects.
 ```
 
 Rama remota:
 
 ```txt
-origin/main como base; feat/services-projects aun no ha sido subida.
+origin/feat/services-projects
 ```
 
 Estado de sincronizacion:
 
 ```txt
-Cambios locales verificados, pendientes de versionar.
+feat/services-projects sincronizada con origin/feat/services-projects.
 ```
 
 Pull request:
 
 ```txt
-Pendiente de crear para feat/services-projects.
+https://github.com/rocouv/entia-cms/pull/12
 ```
 
 ## Funcionalidades implementadas
@@ -215,7 +215,8 @@ Objetivo:
 - `319d6cf docs: actualizar handoff de secciones` ya estaba sincronizado con `origin/feat/theme-settings` antes de esta actualizacion documental.
 - Pull request `feat/theme-settings` hacia `main`: https://github.com/rocouv/entia-cms/pull/11, integrado en `main` con commit `7361e31`.
 - Rama actual de trabajo: `feat/services-projects`, creada desde `origin/main`.
-- `feat/services-projects` agrega categorias, servicios, proyectos, dashboard CRUD, rutas publicas y secciones publicas reales. Pendiente de commit, push y PR.
+- `feat/services-projects` agrega categorias, servicios, proyectos, dashboard CRUD, rutas publicas y secciones publicas reales con commit `56f1859`.
+- Pull request activo de `feat/services-projects` hacia `main`: https://github.com/rocouv/entia-cms/pull/12
 - No commitear `.env`, bases SQLite con datos locales, `vendor`, `node_modules` ni artefactos privados de storage.
 - Si se prueba media localmente, ejecutar `php artisan storage:link` si `public/storage` no existe.
 - Si se actualiza una base existente, ejecutar `php artisan migrate` para crear `categories`, `services` y `projects` ademas de migraciones previas.
