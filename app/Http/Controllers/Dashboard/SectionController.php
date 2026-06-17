@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\StoreSectionRequest;
 use App\Http\Requests\Dashboard\UpdateSectionRequest;
+use App\Models\Media;
 use App\Models\Page;
 use App\Models\Section;
 use App\Models\Site;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -34,6 +36,7 @@ class SectionController extends Controller
         return view('dashboard.sections.create', [
             'page' => $page,
             'types' => Section::TYPES,
+            'imageMedia' => $this->imageMediaFor(auth()->user()),
         ]);
     }
 
@@ -54,6 +57,7 @@ class SectionController extends Controller
             'page' => $page,
             'section' => $section,
             'types' => Section::TYPES,
+            'imageMedia' => $this->imageMediaFor(auth()->user()),
         ]);
     }
 
@@ -98,9 +102,77 @@ class SectionController extends Controller
      */
     private function contentFrom(array $validated, callable $boolean): array
     {
-        $items = $this->itemsFrom($validated['type'], $validated['items_text'] ?? null);
+        $content = $this->typedContentFrom($validated['type'], $validated['content'] ?? [], $boolean);
 
-        return array_filter([
+        if (array_key_exists('content', $validated)) {
+            return $content;
+        }
+
+        return $this->legacyContentFrom($validated, $boolean);
+    }
+
+    /**
+     * @param  array<string, mixed>  $content
+     * @return array<string, mixed>
+     */
+    private function typedContentFrom(string $type, array $content, callable $boolean): array
+    {
+        $content = match ($type) {
+            'hero' => [
+                'title' => $content['title'] ?? null,
+                'subtitle' => $content['subtitle'] ?? null,
+                'image' => $content['image'] ?? null,
+                'button_text' => $content['button_text'] ?? null,
+                'button_url' => $content['button_url'] ?? null,
+            ],
+            'text_block' => [
+                'title' => $content['title'] ?? null,
+                'body' => $content['body'] ?? null,
+            ],
+            'image_text' => [
+                'title' => $content['title'] ?? null,
+                'body' => $content['body'] ?? null,
+                'image' => $content['image'] ?? null,
+                'image_position' => $content['image_position'] ?? null,
+            ],
+            'cards' => [
+                'title' => $content['title'] ?? null,
+                'items' => $this->cardItemsFromArray($content['items'] ?? []),
+            ],
+            'gallery' => [
+                'title' => $content['title'] ?? null,
+                'images' => $this->galleryItemsFromArray($content['images'] ?? []),
+            ],
+            'services', 'projects' => [
+                'title' => $content['title'] ?? null,
+                'category_id' => isset($content['category_id']) ? (int) $content['category_id'] : null,
+                'limit' => isset($content['limit']) ? (int) $content['limit'] : null,
+            ],
+            'contact' => [
+                'title' => $content['title'] ?? null,
+                'body' => $content['body'] ?? null,
+                'show_form' => $boolean('content.show_form'),
+            ],
+            'faq' => [
+                'title' => $content['title'] ?? null,
+                'items' => $this->faqItemsFromArray($content['items'] ?? []),
+            ],
+            default => [],
+        };
+
+        return $this->filledContent($content);
+    }
+
+    /**
+     * @param  array<string, mixed>  $validated
+     * @return array<string, mixed>
+     */
+    private function legacyContentFrom(array $validated, callable $boolean): array
+    {
+        $items = $this->itemsFrom($validated['type'], $validated['items_text'] ?? null);
+        $itemsKey = $validated['type'] === 'gallery' ? 'images' : 'items';
+
+        return $this->filledContent([
             'title' => $validated['content_title'] ?? null,
             'subtitle' => $validated['subtitle'] ?? null,
             'body' => $validated['content_body'] ?? null,
@@ -108,11 +180,75 @@ class SectionController extends Controller
             'image_position' => $validated['image_position'] ?? null,
             'button_text' => $validated['button_text'] ?? null,
             'button_url' => $validated['button_url'] ?? null,
-            'items' => $items,
+            $itemsKey => $items,
             'category_id' => $validated['category_id'] ?? null,
             'limit' => isset($validated['limit']) ? (int) $validated['limit'] : null,
             'show_form' => $boolean('show_form'),
-        ], fn (mixed $value): bool => $value !== null && $value !== [] && $value !== '');
+        ]);
+    }
+
+    /**
+     * @param  array<string, mixed>  $content
+     * @return array<string, mixed>
+     */
+    private function filledContent(array $content): array
+    {
+        return array_filter($content, fn (mixed $value): bool => $value !== null && $value !== [] && $value !== '');
+    }
+
+    /**
+     * @param  array<int, array<string, string|null>>  $items
+     * @return array<int, array<string, string>>
+     */
+    private function cardItemsFromArray(array $items): array
+    {
+        return collect($items)
+            ->map(fn (array $item): array => array_filter([
+                'icon' => $item['icon'] ?? null,
+                'title' => $item['title'] ?? null,
+                'description' => $item['description'] ?? null,
+            ], fn (?string $value): bool => filled($value)))
+            ->filter()
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @param  array<int|string, array<string, string|null>>  $images
+     * @return array<int, array<string, string>>
+     */
+    private function galleryItemsFromArray(array $images): array
+    {
+        return collect($images)
+            ->filter(function (array $image): bool {
+                if (array_key_exists('selected', $image)) {
+                    return filter_var($image['selected'], FILTER_VALIDATE_BOOLEAN) && filled($image['url'] ?? null);
+                }
+
+                return filled($image['url'] ?? null);
+            })
+            ->map(fn (array $image): array => array_filter([
+                'url' => $image['url'] ?? null,
+                'alt' => $image['alt'] ?? null,
+            ], fn (?string $value): bool => filled($value)))
+            ->values()
+            ->all();
+    }
+
+    /**
+     * @param  array<int, array<string, string|null>>  $items
+     * @return array<int, array<string, string>>
+     */
+    private function faqItemsFromArray(array $items): array
+    {
+        return collect($items)
+            ->map(fn (array $item): array => array_filter([
+                'question' => $item['question'] ?? null,
+                'answer' => $item['answer'] ?? null,
+            ], fn (?string $value): bool => filled($value)))
+            ->filter()
+            ->values()
+            ->all();
     }
 
     /**
@@ -192,6 +328,18 @@ class SectionController extends Controller
         }
 
         return Site::query()->firstOrFail();
+    }
+
+    /**
+     * @return Collection<int, Media>
+     */
+    private function imageMediaFor(User $user): Collection
+    {
+        return Media::query()
+            ->whereBelongsTo($this->siteFor($user))
+            ->where('mime_type', 'like', 'image/%')
+            ->latest()
+            ->get();
     }
 
     private function ensurePageBelongsToCurrentSite(Page $page, User $user): void
