@@ -6,6 +6,9 @@
     $pagesActive = request()->routeIs('dashboard.pages.*');
     $sectionsActive = request()->routeIs('dashboard.sections.*');
     $mediaActive = request()->routeIs('dashboard.media.*');
+    $categoriesActive = request()->routeIs('dashboard.categories.*');
+    $servicesActive = request()->routeIs('dashboard.services.*');
+    $projectsActive = request()->routeIs('dashboard.projects.*');
     $usersActive = request()->routeIs('dashboard.users.*');
 @endphp
 
@@ -48,14 +51,18 @@
                         <span class="material-symbols-outlined text-[20px]">image</span>
                         Media
                     </a>
-                    <span class="flex items-center gap-3 rounded px-4 py-2.5 text-on-surface-variant">
+                    <a href="{{ route('dashboard.categories.index') }}" class="flex items-center gap-3 rounded px-4 py-2.5 transition hover:bg-surface-container-high {{ $categoriesActive ? 'bg-secondary-container font-semibold text-on-secondary-container' : 'text-on-surface-variant' }}">
+                        <span class="material-symbols-outlined text-[20px]">category</span>
+                        Categorias
+                    </a>
+                    <a href="{{ route('dashboard.services.index') }}" class="flex items-center gap-3 rounded px-4 py-2.5 transition hover:bg-surface-container-high {{ $servicesActive ? 'bg-secondary-container font-semibold text-on-secondary-container' : 'text-on-surface-variant' }}">
                         <span class="material-symbols-outlined text-[20px]">build</span>
                         Servicios
-                    </span>
-                    <span class="flex items-center gap-3 rounded px-4 py-2.5 text-on-surface-variant">
+                    </a>
+                    <a href="{{ route('dashboard.projects.index') }}" class="flex items-center gap-3 rounded px-4 py-2.5 transition hover:bg-surface-container-high {{ $projectsActive ? 'bg-secondary-container font-semibold text-on-secondary-container' : 'text-on-surface-variant' }}">
                         <span class="material-symbols-outlined text-[20px]">business_center</span>
                         Proyectos
-                    </span>
+                    </a>
                     <a href="{{ route('dashboard.users.index') }}" class="flex items-center gap-3 rounded px-4 py-2.5 transition hover:bg-surface-container-high {{ $usersActive ? 'bg-secondary-container font-semibold text-on-secondary-container' : 'text-on-surface-variant' }}">
                         <span class="material-symbols-outlined text-[20px]">group</span>
                         Usuarios

@@ -1,9 +1,12 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\MediaController;
 use App\Http\Controllers\Dashboard\PageController;
+use App\Http\Controllers\Dashboard\ProjectController;
 use App\Http\Controllers\Dashboard\SectionController;
+use App\Http\Controllers\Dashboard\ServiceController;
 use App\Http\Controllers\Dashboard\SiteSettingsController;
 use App\Http\Controllers\Dashboard\UserController;
 use App\Http\Controllers\DashboardController;
@@ -11,6 +14,10 @@ use App\Http\Controllers\PublicController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PublicController::class, 'home'])->name('home');
+Route::get('/servicios', [PublicController::class, 'services'])->name('services.index');
+Route::get('/servicios/{slug}', [PublicController::class, 'service'])->name('services.show');
+Route::get('/proyectos', [PublicController::class, 'projects'])->name('projects.index');
+Route::get('/proyectos/{slug}', [PublicController::class, 'project'])->name('projects.show');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'create'])->name('login');
@@ -27,6 +34,15 @@ Route::middleware('auth')->group(function () {
     Route::resource('/dashboard/pages', PageController::class)
         ->except('show')
         ->names('dashboard.pages');
+    Route::resource('/dashboard/categories', CategoryController::class)
+        ->except('show')
+        ->names('dashboard.categories');
+    Route::resource('/dashboard/services', ServiceController::class)
+        ->except('show')
+        ->names('dashboard.services');
+    Route::resource('/dashboard/projects', ProjectController::class)
+        ->except('show')
+        ->names('dashboard.projects');
     Route::get('/dashboard/pages/{page}/sections', [SectionController::class, 'index'])->name('dashboard.sections.index');
     Route::get('/dashboard/pages/{page}/sections/create', [SectionController::class, 'create'])->name('dashboard.sections.create');
     Route::post('/dashboard/pages/{page}/sections', [SectionController::class, 'store'])->name('dashboard.sections.store');

@@ -67,4 +67,28 @@ class Site extends Model
     {
         return $this->hasMany(Page::class);
     }
+
+    /**
+     * @return HasMany<Category, $this>
+     */
+    public function categories(): HasMany
+    {
+        return $this->hasMany(Category::class);
+    }
+
+    /**
+     * @return HasMany<Service, $this>
+     */
+    public function services(): HasMany
+    {
+        return $this->hasMany(Service::class);
+    }
+
+    /**
+     * @return HasMany<Project, $this>
+     */
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class);
+    }
 }

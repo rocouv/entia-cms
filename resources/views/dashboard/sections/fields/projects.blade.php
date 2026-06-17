@@ -5,8 +5,13 @@
 </label>
 
 <label class="grid gap-2">
-    <span class="text-label-md text-on-surface">ID de categoria</span>
-    <input name="content[category_id]" type="number" min="1" value="{{ data_get($content, 'category_id') }}" class="h-10 rounded border border-outline-variant bg-surface px-3 text-body-md outline-none transition focus:border-primary">
+    <span class="text-label-md text-on-surface">Categoria</span>
+    <select name="content[category_id]" class="h-10 rounded border border-outline-variant bg-surface px-3 text-body-md outline-none transition focus:border-primary">
+        <option value="">Todas las categorias</option>
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}" @selected((string) data_get($content, 'category_id') === (string) $category->id)>{{ $category->name }}</option>
+        @endforeach
+    </select>
     @error('content.category_id') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
 </label>
 

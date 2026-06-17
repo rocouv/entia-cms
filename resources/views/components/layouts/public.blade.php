@@ -1,9 +1,11 @@
+@props(['title' => null, 'metaDescription' => null])
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ $metaTitle ?? $siteSettings?->meta_title ?? $siteSettings?->site_name ?? config('app.name') }}</title>
+        <title>{{ $title ?? $siteSettings?->meta_title ?? $siteSettings?->site_name ?? config('app.name') }}</title>
         @if($metaDescription ?? $siteSettings?->meta_description ?? false)
             <meta name="description" content="{{ $metaDescription ?? $siteSettings->meta_description }}">
         @endif
