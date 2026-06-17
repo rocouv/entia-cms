@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Media;
 use App\Models\Page;
 use App\Models\Role;
 use App\Models\Section;
@@ -86,6 +87,99 @@ it('allows authenticated users to create sections', function () {
         ->and($section->settings['spacing'])->toBe('large')
         ->and($section->sort_order)->toBe(1)
         ->and($section->is_visible)->toBeTrue();
+});
+
+it('allows authenticated users to create sections with typed content fields', function () {
+    $editor = createSectionUser();
+    $page = Page::factory()->for($editor->site)->create();
+
+    $this->actingAs($editor)
+        ->post("/dashboard/pages/{$page->id}/sections", [
+            'type' => 'cards',
+            'content' => [
+                'title' => 'Beneficios',
+                'items' => [
+                    ['icon' => 'bolt', 'title' => 'Rapido', 'description' => 'Carga agil.'],
+                    ['icon' => 'edit', 'title' => 'Editable', 'description' => 'Contenido flexible.'],
+                    ['icon' => '', 'title' => '', 'description' => ''],
+                ],
+            ],
+            'sort_order' => '2',
+            'is_visible' => '1',
+        ])
+        ->assertRedirect("/dashboard/pages/{$page->id}/sections");
+
+    $section = Section::query()->firstOrFail();
+
+    expect($section->type)->toBe('cards')
+        ->and($section->content['title'])->toBe('Beneficios')
+        ->and($section->content['items'])->toBe([
+            ['icon' => 'bolt', 'title' => 'Rapido', 'description' => 'Carga agil.'],
+            ['icon' => 'edit', 'title' => 'Editable', 'description' => 'Contenido flexible.'],
+        ]);
+});
+
+it('shows site images in gallery section fields', function () {
+    $editor = createSectionUser();
+    $page = Page::factory()->for($editor->site)->create();
+    $siteImage = Media::factory()->for($editor->site)->create([
+        'original_name' => 'local.jpg',
+        'mime_type' => 'image/jpeg',
+        'alt_text' => null,
+    ]);
+    $otherImage = Media::factory()->create([
+        'original_name' => 'externa.jpg',
+        'mime_type' => 'image/jpeg',
+        'alt_text' => null,
+    ]);
+
+    $this->actingAs($editor)
+        ->get("/dashboard/pages/{$page->id}/sections/create")
+        ->assertOk()
+        ->assertSee($siteImage->original_name)
+        ->assertDontSee($otherImage->original_name);
+});
+
+it('stores gallery images from selected media fields', function () {
+    $editor = createSectionUser();
+    $page = Page::factory()->for($editor->site)->create();
+    $selectedImage = Media::factory()->for($editor->site)->create([
+        'path' => 'media/seleccionada.jpg',
+        'alt_text' => 'Imagen seleccionada',
+    ]);
+
+    $this->actingAs($editor)
+        ->post("/dashboard/pages/{$page->id}/sections", [
+            'type' => 'gallery',
+            'content' => [
+                'title' => 'Galeria',
+                'images' => [
+                    'media_'.$selectedImage->id => [
+                        'selected' => '1',
+                        'url' => $selectedImage->path,
+                        'alt' => $selectedImage->alt_text,
+                    ],
+                    'manual_0' => [
+                        'url' => 'media/manual.jpg',
+                        'alt' => 'Manual',
+                    ],
+                    'manual_1' => [
+                        'url' => '',
+                        'alt' => '',
+                    ],
+                ],
+            ],
+            'sort_order' => '3',
+            'is_visible' => '1',
+        ])
+        ->assertRedirect("/dashboard/pages/{$page->id}/sections");
+
+    $section = Section::query()->firstOrFail();
+
+    expect($section->content['images'])->toBe([
+        ['url' => 'media/seleccionada.jpg', 'alt' => 'Imagen seleccionada'],
+        ['url' => 'media/manual.jpg', 'alt' => 'Manual'],
+    ]);
 });
 
 it('allows authenticated users to update sections', function () {

@@ -1,22 +1,6 @@
 @php
-    $content = $section->content ?? [];
+    $content = old('content', $section->content ?? []);
     $settings = $section->settings ?? [];
-    $itemsText = collect(data_get($content, 'items', []))
-        ->map(function ($item) use ($section) {
-            if (! is_array($item)) {
-                return $item;
-            }
-
-            return match ($section->type) {
-                'cards' => ($item['description'] ?? false)
-                    ? implode('|', [$item['icon'] ?? '', $item['title'] ?? '', $item['description']])
-                    : ($item['title'] ?? ''),
-                'faq' => implode('|', [$item['question'] ?? '', $item['answer'] ?? '']),
-                'gallery' => implode('|', [$item['url'] ?? '', $item['alt'] ?? '']),
-                default => json_encode($item),
-            };
-        })
-        ->implode("\n");
 @endphp
 
 <x-dashboard-layout title="Editar seccion">
@@ -24,7 +8,7 @@
         <p class="text-label-sm uppercase tracking-[0.2em] text-on-surface-variant">{{ $page->title }}</p>
         <h1 class="mt-2 text-headline-lg text-primary">Editar seccion</h1>
         <p class="mt-2 max-w-2xl text-body-md text-on-surface-variant">
-            Ajusta el contenido JSON y la configuracion basica de esta seccion.
+            Ajusta el contenido y la configuracion basica de esta seccion.
         </p>
     </section>
 
@@ -38,69 +22,10 @@
                     <h2 class="text-headline-md text-primary">Contenido</h2>
                 </div>
 
-                <div class="grid gap-5 p-6 sm:grid-cols-2">
-                    <label class="grid gap-2 sm:col-span-2">
-                        <span class="text-label-md text-on-surface">Tipo</span>
-                        <select name="type" required class="h-10 rounded border border-outline-variant bg-surface px-3 text-body-md outline-none transition focus:border-primary">
-                            @foreach ($types as $value => $label)
-                                <option value="{{ $value }}" @selected(old('type', $section->type) === $value)>{{ $label }}</option>
-                            @endforeach
-                        </select>
-                        @error('type') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
-                    </label>
-
-                    <label class="grid gap-2 sm:col-span-2">
-                        <span class="text-label-md text-on-surface">Titulo</span>
-                        <input name="content_title" value="{{ old('content_title', data_get($content, 'title')) }}" class="h-10 rounded border border-outline-variant bg-surface px-3 text-body-md outline-none transition focus:border-primary">
-                        @error('content_title') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
-                    </label>
-
-                    <label class="grid gap-2 sm:col-span-2">
-                        <span class="text-label-md text-on-surface">Subtitulo</span>
-                        <input name="subtitle" value="{{ old('subtitle', data_get($content, 'subtitle')) }}" class="h-10 rounded border border-outline-variant bg-surface px-3 text-body-md outline-none transition focus:border-primary">
-                        @error('subtitle') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
-                    </label>
-
-                    <label class="grid gap-2 sm:col-span-2">
-                        <span class="text-label-md text-on-surface">Cuerpo</span>
-                        <textarea name="content_body" rows="5" class="rounded border border-outline-variant bg-surface px-3 py-2 text-body-md outline-none transition focus:border-primary">{{ old('content_body', data_get($content, 'body')) }}</textarea>
-                        @error('content_body') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
-                    </label>
-
-                    <label class="grid gap-2">
-                        <span class="text-label-md text-on-surface">Imagen o URL</span>
-                        <input name="image" value="{{ old('image', data_get($content, 'image')) }}" class="h-10 rounded border border-outline-variant bg-surface px-3 text-body-md outline-none transition focus:border-primary">
-                        @error('image') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
-                    </label>
-
-                    <label class="grid gap-2">
-                        <span class="text-label-md text-on-surface">Posicion de imagen</span>
-                        <select name="image_position" class="h-10 rounded border border-outline-variant bg-surface px-3 text-body-md outline-none transition focus:border-primary">
-                            <option value="">Sin definir</option>
-                            <option value="left" @selected(old('image_position', data_get($content, 'image_position')) === 'left')>Izquierda</option>
-                            <option value="right" @selected(old('image_position', data_get($content, 'image_position')) === 'right')>Derecha</option>
-                        </select>
-                        @error('image_position') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
-                    </label>
-
-                    <label class="grid gap-2">
-                        <span class="text-label-md text-on-surface">Texto del boton</span>
-                        <input name="button_text" value="{{ old('button_text', data_get($content, 'button_text')) }}" class="h-10 rounded border border-outline-variant bg-surface px-3 text-body-md outline-none transition focus:border-primary">
-                        @error('button_text') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
-                    </label>
-
-                    <label class="grid gap-2">
-                        <span class="text-label-md text-on-surface">URL del boton</span>
-                        <input name="button_url" value="{{ old('button_url', data_get($content, 'button_url')) }}" class="h-10 rounded border border-outline-variant bg-surface px-3 text-body-md outline-none transition focus:border-primary">
-                        @error('button_url') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
-                    </label>
-
-                    <label class="grid gap-2 sm:col-span-2">
-                        <span class="text-label-md text-on-surface">Items</span>
-                        <textarea name="items_text" rows="5" placeholder="Cards: icon|titulo|descripcion. FAQ: pregunta|respuesta. Galeria: ruta|alt." class="rounded border border-outline-variant bg-surface px-3 py-2 text-body-md outline-none transition focus:border-primary">{{ old('items_text', $itemsText) }}</textarea>
-                        @error('items_text') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
-                    </label>
-                </div>
+                @include('dashboard.sections._content-fields', [
+                    'content' => $content,
+                    'selectedType' => old('type', $section->type),
+                ])
             </section>
         </div>
 
@@ -145,4 +70,6 @@
             </div>
         </aside>
     </form>
+
+    @include('dashboard.sections._content-fields-script')
 </x-dashboard-layout>
