@@ -2,7 +2,7 @@
 
 ## Estado actual
 
-Entia CMS esta en fase de render publico y configuracion visual del MVP. El proyecto usa Laravel 13, Blade, TailwindCSS 4, SQLite y Pest.
+Entia CMS esta en fase de edicion de secciones y modulos de contenido del MVP. El proyecto usa Laravel 13, Blade, TailwindCSS 4, SQLite y Pest.
 
 Rama actual:
 
@@ -13,7 +13,7 @@ feat/theme-settings
 Ultimo commit de feature:
 
 ```txt
-a1b0c25 feat: agregar tema visual configurable
+961969c feat: agregar formularios por tipo de seccion
 ```
 
 Rama remota:
@@ -57,7 +57,7 @@ https://github.com/rocouv/entia-cms/pull/new/feat/theme-settings
 - Tipos de seccion soportados: `hero`, `text_block`, `image_text`, `cards`, `gallery`, `services`, `projects`, `contact` y `faq`.
 - El contenido editable se guarda en JSON `content` y la configuracion visual en JSON `settings`.
 - Orden manual con `sort_order` y visibilidad controlada por `is_visible`.
-- Formulario administrativo basico para secciones en Blade. El campo `items_text` soporta formatos por tipo: `cards` usa `icono|titulo|descripcion`, `faq` usa `pregunta|respuesta` y `gallery` usa `ruta|alt`.
+- Formularios administrativos por tipo de seccion en Blade, con soporte legacy para `items_text`: `cards` usa `icono|titulo|descripcion`, `faq` usa `pregunta|respuesta` y `gallery` usa `ruta|alt`.
 - Render publico en la raiz del sitio (`/` y `/{slug}`).
 - Pagina de inicio (`/`) cargada desde la pagina marcada como `is_home` en la base de datos.
 - Pagina por slug (`/{slug}`) cargada desde `pages` con `is_published = true`.
@@ -87,10 +87,15 @@ https://github.com/rocouv/entia-cms/pull/new/feat/theme-settings
 - Componente `resources/views/components/theme-style.blade.php` inyecta variables CSS runtime y Google Fonts dinamico en sitio publico y dashboard.
 - Tailwind usa variables CSS `--theme-*` con fallback a la paleta base, por lo que los colores cambian sin recompilar por cliente.
 - Paleta de referencia para Diseno Vector probada en tests: rojo energetico `#E31B23`, rojo corporativo `#B81414`, rojo oscuro `#5E0608`, blanco `#FFFFFF`, negro `#000000`, gris carbon `#232323`, fuente `Montserrat`.
+- Formularios de secciones por tipo en `resources/views/dashboard/sections/fields/` para `hero`, `text_block`, `image_text`, `cards`, `gallery`, `services`, `projects`, `contact` y `faq`.
+- Crear y editar secciones ya muestran solo los campos aplicables al tipo seleccionado, con cambio liviano mediante JavaScript y fieldsets Blade deshabilitados para tipos no activos.
+- El formulario nuevo guarda contenido estructurado en `content[...]`; el controlador mantiene compatibilidad con los campos legacy (`content_title`, `items_text`, etc.).
+- Galeria ahora guarda imagenes en `content.images`, alineado con el render publico existente, y mantiene compatibilidad al recibir `items_text` legacy.
+- Galeria incluye selector visual basico de imagenes desde `media` del sitio actual y filas manuales para rutas adicionales.
 
 ## Verificaciones recientes
 
-Ejecutadas antes de commitear `feat/theme-settings`:
+Ejecutadas despues de implementar formularios por tipo de seccion:
 
 ```bash
 ./vendor/bin/pest tests/Feature
@@ -100,7 +105,7 @@ npm run build
 
 Resultado:
 
-- `./vendor/bin/pest tests/Feature`: 36 tests pasan, 157 assertions.
+- `./vendor/bin/pest tests/Feature`: 39 tests pasan, 168 assertions.
 - `./vendor/bin/pint --test`: pasa.
 - `npm run build`: pasa.
 
@@ -116,29 +121,32 @@ La migracion `2026_06_10_000008_add_theme_to_site_settings_table` agrega `site_s
 
 ## Siguiente paso recomendado
 
-Formularios de edicion por tipo de seccion.
+Servicios, proyectos y categorias.
 
 Objetivo:
 
-- Reemplazar el formulario generico de secciones por campos especificos segun `type`.
+- Crear modelos, migraciones, factories, controladores y vistas dashboard para `categories`, `services` y `projects`.
 - Mantener Blade + TailwindCSS, sin React, Vue, Inertia ni Filament.
-- Implementar partials Blade por tipo en `resources/views/dashboard/sections/fields/`.
-- Cargar el partial correspondiente al cambiar el tipo de seccion, idealmente con fetch liviano a un endpoint que devuelve HTML.
-- Crear editor especifico para `hero`, `text_block`, `image_text`, `cards`, `gallery`, `faq`, `contact`, `services` y `projects`.
-- Para `gallery`, integrar selector visual de media en vez de requerir rutas manuales en `items_text`.
-- Mantener compatibilidad con el JSON `content` existente y con el parsing actual mientras se migra el formulario.
+- Permitir que administradores y editores gestionen categorias, servicios y proyectos.
+- Mantener `site_id` en categorias, servicios y proyectos para compatibilidad monositio/futuro crecimiento.
+- Crear slugs normalizados y unicos por sitio para servicios y proyectos.
+- Asociar servicios/proyectos a categorias opcionales.
+- Incluir imagen principal opcional desde media/ruta para servicios y proyectos.
+- Crear render publico de listado y detalle para `/servicios`, `/servicios/{slug}`, `/proyectos` y `/proyectos/{slug}`.
+- Actualizar secciones publicas `services` y `projects` para mostrar elementos reales en vez de placeholders.
 
 ## Pendientes posteriores
 
-- Servicios y proyectos.
 - Formulario publico de contacto con Resend.
 - Checklist de despliegue con SQLite, backups, storage persistente y SSL.
+- Opcional: si el editor de secciones crece demasiado, extraer carga de partials por tipo a un endpoint liviano que devuelva HTML.
 
 ## Notas operativas
 
 - `main` remoto ya contiene configuracion general, gestion de usuarios, media, paginas y secciones.
 - `feat/public-render` contiene el render publico con Blade y fue subido al remoto con commit `f88a97f`.
 - `feat/theme-settings` contiene configuracion visual de colores/tipografia y fue subido al remoto con commit `a1b0c25`.
+- `feat: agregar formularios por tipo de seccion` agrega formularios especificos por tipo y selector basico de media para galeria con commit `961969c`.
 - Antes del siguiente modulo, crear rama desde la rama integrada aprobada. Si `feat/theme-settings` aun no fue mergeada, la siguiente rama puede partir de ella para conservar el sistema visual.
 - No commitear `.env`, bases SQLite con datos locales, `vendor`, `node_modules` ni artefactos privados de storage.
 - Si se prueba media localmente, ejecutar `php artisan storage:link` si `public/storage` no existe.
