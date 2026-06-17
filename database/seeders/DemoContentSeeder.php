@@ -2,8 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use App\Models\Page;
+use App\Models\Project;
 use App\Models\Section;
+use App\Models\Service;
 use App\Models\Site;
 use Illuminate\Database\Seeder;
 
@@ -94,6 +97,185 @@ class DemoContentSeeder extends Seeder
                 );
             }
         }
+
+        $this->seedCatalog($site);
+    }
+
+    private function seedCatalog(Site $site): void
+    {
+        $categories = [];
+
+        foreach ($this->categories() as $categoryData) {
+            $categories[$categoryData['slug']] = Category::query()->updateOrCreate(
+                [
+                    'site_id' => $site->id,
+                    'slug' => $categoryData['slug'],
+                ],
+                [
+                    'name' => $categoryData['name'],
+                    'description' => $categoryData['description'],
+                    'sort_order' => $categoryData['sort_order'],
+                    'is_active' => true,
+                ],
+            );
+        }
+
+        foreach ($this->services() as $serviceData) {
+            Service::query()->updateOrCreate(
+                [
+                    'site_id' => $site->id,
+                    'slug' => $serviceData['slug'],
+                ],
+                [
+                    'category_id' => $categories[$serviceData['category_slug']]->id ?? null,
+                    'title' => $serviceData['title'],
+                    'excerpt' => $serviceData['excerpt'],
+                    'body' => $serviceData['body'],
+                    'image_path' => null,
+                    'is_published' => true,
+                    'is_featured' => $serviceData['is_featured'],
+                    'sort_order' => $serviceData['sort_order'],
+                    'meta_title' => $serviceData['meta_title'],
+                    'meta_description' => $serviceData['meta_description'],
+                ],
+            );
+        }
+
+        foreach ($this->projects() as $projectData) {
+            Project::query()->updateOrCreate(
+                [
+                    'site_id' => $site->id,
+                    'slug' => $projectData['slug'],
+                ],
+                [
+                    'category_id' => $categories[$projectData['category_slug']]->id ?? null,
+                    'title' => $projectData['title'],
+                    'client_name' => $projectData['client_name'],
+                    'excerpt' => $projectData['excerpt'],
+                    'body' => $projectData['body'],
+                    'image_path' => null,
+                    'is_published' => true,
+                    'is_featured' => $projectData['is_featured'],
+                    'sort_order' => $projectData['sort_order'],
+                    'meta_title' => $projectData['meta_title'],
+                    'meta_description' => $projectData['meta_description'],
+                ],
+            );
+        }
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function categories(): array
+    {
+        return [
+            [
+                'name' => 'Marca y estrategia',
+                'slug' => 'marca-y-estrategia',
+                'description' => 'Definicion de posicionamiento, identidad y mensajes.',
+                'sort_order' => 0,
+            ],
+            [
+                'name' => 'Campanas digitales',
+                'slug' => 'campanas-digitales',
+                'description' => 'Lanzamientos, pauta, contenido y conversion.',
+                'sort_order' => 10,
+            ],
+            [
+                'name' => 'Contenido social',
+                'slug' => 'contenido-social',
+                'description' => 'Calendarios, piezas y direccion creativa para redes.',
+                'sort_order' => 20,
+            ],
+        ];
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function services(): array
+    {
+        return [
+            [
+                'category_slug' => 'marca-y-estrategia',
+                'title' => 'Branding e identidad',
+                'slug' => 'branding-e-identidad',
+                'excerpt' => 'Nombre, concepto, identidad visual, manual basico y mensajes centrales.',
+                'body' => 'Construimos una base clara para que la marca pueda presentarse, vender y sostener comunicacion sin improvisar. Incluye diagnostico, concepto, sistema visual base, tono y lineamientos de uso.',
+                'is_featured' => true,
+                'sort_order' => 0,
+                'meta_title' => 'Branding e identidad | Lumina Publicidad',
+                'meta_description' => 'Servicio de branding, identidad visual y mensajes centrales para marcas en crecimiento.',
+            ],
+            [
+                'category_slug' => 'campanas-digitales',
+                'title' => 'Campanas digitales',
+                'slug' => 'campanas-digitales',
+                'excerpt' => 'Concepto creativo, piezas para pauta, landing y reportes de aprendizaje.',
+                'body' => 'Planeamos campanas con una meta clara: alcance, registro, venta o posicionamiento. Definimos audiencia, mensaje, piezas, canales, medicion y aprendizaje para optimizar siguientes iteraciones.',
+                'is_featured' => true,
+                'sort_order' => 10,
+                'meta_title' => 'Campanas digitales | Lumina Publicidad',
+                'meta_description' => 'Campanas digitales con concepto creativo, pauta y medicion para negocios locales.',
+            ],
+            [
+                'category_slug' => 'contenido-social',
+                'title' => 'Contenido social',
+                'slug' => 'contenido-social',
+                'excerpt' => 'Calendarios, copies, guiones cortos y direccion creativa para redes.',
+                'body' => 'Ordenamos presencia social con pilares editoriales, calendario mensual, guiones, copies y direccion visual. El objetivo es publicar con consistencia sin perder personalidad ni foco comercial.',
+                'is_featured' => false,
+                'sort_order' => 20,
+                'meta_title' => 'Contenido social | Lumina Publicidad',
+                'meta_description' => 'Contenido social y direccion creativa para marcas que necesitan consistencia digital.',
+            ],
+        ];
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    private function projects(): array
+    {
+        return [
+            [
+                'category_slug' => 'campanas-digitales',
+                'title' => 'Bruma Cafe',
+                'slug' => 'bruma-cafe',
+                'client_name' => 'Bruma Cafe',
+                'excerpt' => 'Reposicionamiento local y campana de apertura para tres sucursales.',
+                'body' => 'Bruma necesitaba abrir nuevas sucursales sin diluir su caracter local. El trabajo combino narrativa de barrio, piezas digitales y pauta geolocalizada para mover visitas durante las primeras semanas.',
+                'is_featured' => true,
+                'sort_order' => 0,
+                'meta_title' => 'Bruma Cafe | Proyecto demo Lumina',
+                'meta_description' => 'Caso demo de reposicionamiento y campana de apertura para cafeterias.',
+            ],
+            [
+                'category_slug' => 'campanas-digitales',
+                'title' => 'Nexo Fit',
+                'slug' => 'nexo-fit',
+                'client_name' => 'Nexo Fit',
+                'excerpt' => 'Lanzamiento digital con piezas cortas, pauta local y landing de conversion.',
+                'body' => 'Nexo Fit necesitaba llenar clases iniciales. La campana simplifico la propuesta, mostro beneficios concretos y llevo trafico a una landing con llamada a prueba gratuita.',
+                'is_featured' => true,
+                'sort_order' => 10,
+                'meta_title' => 'Nexo Fit | Proyecto demo Lumina',
+                'meta_description' => 'Caso demo de lanzamiento digital para gimnasio boutique.',
+            ],
+            [
+                'category_slug' => 'marca-y-estrategia',
+                'title' => 'Casa Verde',
+                'slug' => 'casa-verde',
+                'client_name' => 'Casa Verde',
+                'excerpt' => 'Identidad visual y calendario social para marca de productos sustentables.',
+                'body' => 'Casa Verde necesitaba comunicar sustentabilidad sin caer en lugares comunes. Se definio una voz sobria, paleta natural y sistema de publicaciones para educar, vender y construir confianza.',
+                'is_featured' => false,
+                'sort_order' => 20,
+                'meta_title' => 'Casa Verde | Proyecto demo Lumina',
+                'meta_description' => 'Caso demo de identidad y contenido social para marca sustentable.',
+            ],
+        ];
     }
 
     /**
@@ -191,42 +373,11 @@ class DemoContentSeeder extends Seeder
                         'settings' => ['background_color' => 'surface-container-lowest'],
                     ],
                     [
-                        'type' => 'cards',
+                        'type' => 'services',
                         'sort_order' => 10,
                         'content' => [
                             'title' => 'Menu de servicios',
-                            'items' => [
-                                [
-                                    'icon' => 'draw',
-                                    'title' => 'Branding e identidad',
-                                    'description' => 'Nombre, concepto, identidad visual, manual basico y mensajes centrales.',
-                                ],
-                                [
-                                    'icon' => 'ads_click',
-                                    'title' => 'Campanas digitales',
-                                    'description' => 'Concepto creativo, landings, piezas para pauta y reportes de aprendizaje.',
-                                ],
-                                [
-                                    'icon' => 'photo_camera',
-                                    'title' => 'Contenido social',
-                                    'description' => 'Calendarios, copies, guiones cortos y direccion creativa para redes.',
-                                ],
-                                [
-                                    'icon' => 'analytics',
-                                    'title' => 'Performance marketing',
-                                    'description' => 'Pauta, testing, embudos simples y optimizacion por conversion.',
-                                ],
-                                [
-                                    'icon' => 'storefront',
-                                    'title' => 'Lanzamientos',
-                                    'description' => 'Plan completo para presentar producto, servicio, sucursal o nueva marca.',
-                                ],
-                                [
-                                    'icon' => 'school',
-                                    'title' => 'Consultoria creativa',
-                                    'description' => 'Diagnostico, roadmap y sesiones para equipos que ejecutan internamente.',
-                                ],
-                            ],
+                            'limit' => 6,
                         ],
                         'settings' => ['background_color' => 'white'],
                     ],
@@ -253,27 +404,11 @@ class DemoContentSeeder extends Seeder
                         'settings' => ['background_color' => 'surface-container-lowest'],
                     ],
                     [
-                        'type' => 'cards',
+                        'type' => 'projects',
                         'sort_order' => 10,
                         'content' => [
                             'title' => 'Casos destacados',
-                            'items' => [
-                                [
-                                    'icon' => 'local_cafe',
-                                    'title' => 'Bruma Cafe',
-                                    'description' => 'Reposicionamiento local, nueva voz de marca y campana de apertura para tres sucursales.',
-                                ],
-                                [
-                                    'icon' => 'fitness_center',
-                                    'title' => 'Nexo Fit',
-                                    'description' => 'Lanzamiento digital con piezas cortas, pauta geolocalizada y landing de conversion.',
-                                ],
-                                [
-                                    'icon' => 'spa',
-                                    'title' => 'Casa Verde',
-                                    'description' => 'Identidad visual y calendario social para marca de productos sustentables.',
-                                ],
-                            ],
+                            'limit' => 6,
                         ],
                         'settings' => ['background_color' => 'white'],
                     ],

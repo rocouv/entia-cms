@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Media;
 use App\Models\Page;
+use App\Models\Project;
 use App\Models\Section;
+use App\Models\Service;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -18,6 +20,8 @@ class DashboardController extends Controller
                 'sections' => Section::count(),
                 'visibleSections' => Section::where('is_visible', true)->count(),
                 'media' => Media::count(),
+                'services' => Service::count(),
+                'projects' => Project::count(),
             ],
             'recentPages' => Page::withCount('sections')
                 ->latest()

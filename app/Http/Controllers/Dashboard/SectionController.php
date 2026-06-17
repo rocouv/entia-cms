@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\StoreSectionRequest;
 use App\Http\Requests\Dashboard\UpdateSectionRequest;
+use App\Models\Category;
 use App\Models\Media;
 use App\Models\Page;
 use App\Models\Section;
@@ -36,6 +37,7 @@ class SectionController extends Controller
         return view('dashboard.sections.create', [
             'page' => $page,
             'types' => Section::TYPES,
+            'categories' => $this->categoriesFor(auth()->user()),
             'imageMedia' => $this->imageMediaFor(auth()->user()),
         ]);
     }
@@ -57,6 +59,7 @@ class SectionController extends Controller
             'page' => $page,
             'section' => $section,
             'types' => Section::TYPES,
+            'categories' => $this->categoriesFor(auth()->user()),
             'imageMedia' => $this->imageMediaFor(auth()->user()),
         ]);
     }
@@ -145,7 +148,7 @@ class SectionController extends Controller
             ],
             'services', 'projects' => [
                 'title' => $content['title'] ?? null,
-                'category_id' => isset($content['category_id']) ? (int) $content['category_id'] : null,
+                'category_id' => filled($content['category_id'] ?? null) ? (int) $content['category_id'] : null,
                 'limit' => isset($content['limit']) ? (int) $content['limit'] : null,
             ],
             'contact' => [
@@ -181,7 +184,7 @@ class SectionController extends Controller
             'button_text' => $validated['button_text'] ?? null,
             'button_url' => $validated['button_url'] ?? null,
             $itemsKey => $items,
-            'category_id' => $validated['category_id'] ?? null,
+            'category_id' => filled($validated['category_id'] ?? null) ? (int) $validated['category_id'] : null,
             'limit' => isset($validated['limit']) ? (int) $validated['limit'] : null,
             'show_form' => $boolean('show_form'),
         ]);
@@ -339,6 +342,19 @@ class SectionController extends Controller
             ->whereBelongsTo($this->siteFor($user))
             ->where('mime_type', 'like', 'image/%')
             ->latest()
+            ->get();
+    }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    private function categoriesFor(User $user): Collection
+    {
+        return Category::query()
+            ->whereBelongsTo($this->siteFor($user))
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('name')
             ->get();
     }
 

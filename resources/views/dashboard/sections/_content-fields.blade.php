@@ -16,7 +16,7 @@
 
     @foreach (array_keys($types) as $type)
         <fieldset data-section-fields="{{ $type }}" class="grid gap-5 sm:col-span-2 sm:grid-cols-2" @if ($selectedType !== $type) hidden disabled @endif>
-            @include("dashboard.sections.fields.{$type}", ['content' => $content, 'imageMedia' => $imageMedia])
+            @include("dashboard.sections.fields.{$type}", ['content' => $content, 'imageMedia' => $imageMedia, 'categories' => $categories])
         </fieldset>
     @endforeach
 </div>

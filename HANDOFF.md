@@ -7,37 +7,37 @@ Entia CMS esta en fase de edicion de secciones y modulos de contenido del MVP. E
 Rama actual:
 
 ```txt
-feat/theme-settings
+feat/services-projects
 ```
 
-Ultimo commit funcional relevante:
+Ultimo commit base remoto:
 
 ```txt
-961969c feat: agregar formularios por tipo de seccion
+7361e31 Merge pull request #11 from rocouv/feat/theme-settings
 ```
 
-Ultimo commit remoto confirmado antes de este handoff:
+Estado del modulo actual:
 
 ```txt
-319d6cf docs: actualizar handoff de secciones
+Servicios, proyectos y categorias implementados localmente en feat/services-projects, pendientes de commit/push/PR.
 ```
 
 Rama remota:
 
 ```txt
-origin/feat/theme-settings
+origin/main como base; feat/services-projects aun no ha sido subida.
 ```
 
 Estado de sincronizacion:
 
 ```txt
-feat/theme-settings sincronizada con origin/feat/theme-settings antes de esta actualizacion documental.
+Cambios locales verificados, pendientes de versionar.
 ```
 
 Pull request:
 
 ```txt
-https://github.com/rocouv/entia-cms/pull/11
+Pendiente de crear para feat/services-projects.
 ```
 
 ## Funcionalidades implementadas
@@ -81,8 +81,8 @@ https://github.com/rocouv/entia-cms/pull/11
   - `image-text`: imagen y texto con posicion izquierda/derecha configurable.
   - `cards`: grilla de tarjetas con icono, titulo y descripcion.
   - `gallery`: grilla de imagenes con efecto hover.
-  - `services`: placeholder con enlace al dashboard.
-  - `projects`: placeholder con enlace al dashboard.
+  - `services`: grilla publica de servicios publicados, con filtro opcional por categoria y limite.
+  - `projects`: grilla publica de proyectos publicados, con filtro opcional por categoria y limite.
   - `contact`: seccion de contacto con placeholder de formulario.
   - `faq`: acordeon de preguntas y respuestas.
 - Vista faltante no rompe la pagina; solo muestra mensaje de debug en entorno local.
@@ -104,23 +104,65 @@ https://github.com/rocouv/entia-cms/pull/11
 - El formulario nuevo guarda contenido estructurado en `content[...]`; el controlador mantiene compatibilidad con los campos legacy (`content_title`, `items_text`, etc.).
 - Galeria ahora guarda imagenes en `content.images`, alineado con el render publico existente, y mantiene compatibilidad al recibir `items_text` legacy.
 - Galeria incluye selector visual basico de imagenes desde `media` del sitio actual y filas manuales para rutas adicionales.
+- Categorias administrables en `/dashboard/categories`.
+- La tabla `categories` guarda `site_id`, `name`, `slug`, `description`, `sort_order`, `is_active` y timestamps.
+- Servicios administrables en `/dashboard/services`.
+- La tabla `services` guarda `site_id`, `category_id`, `title`, `slug`, `excerpt`, `body`, `image_path`, `is_published`, `is_featured`, `sort_order`, `meta_title`, `meta_description` y timestamps.
+- Proyectos administrables en `/dashboard/projects`.
+- La tabla `projects` guarda `site_id`, `category_id`, `title`, `slug`, `client_name`, `excerpt`, `body`, `image_path`, `is_published`, `is_featured`, `sort_order`, `meta_title`, `meta_description` y timestamps.
+- Slugs de categorias, servicios y proyectos son unicos por sitio.
+- Servicios/proyectos pueden asociarse a una categoria opcional del mismo sitio.
+- Servicios/proyectos pueden usar imagen principal opcional desde ruta local de media o URL absoluta.
+- Rutas publicas agregadas: `/servicios`, `/servicios/{slug}`, `/proyectos` y `/proyectos/{slug}`.
+- Las rutas publicas solo muestran servicios/proyectos con `is_published = true`; borradores devuelven 404 en detalle y no aparecen en listados.
+- El layout publico `resources/views/components/layouts/public.blade.php` declara props `title` y `metaDescription`, por lo que paginas, servicios y proyectos aplican correctamente titulo y meta description.
+- Secciones publicas `services` y `projects` ya muestran registros reales publicados en vez de placeholders.
+- Formularios de secciones `services` y `projects` usan selector de categorias activas del sitio actual.
+- `DemoContentSeeder` ahora crea categorias, servicios y proyectos demo realistas para Lumina Publicidad.
 
 ## Verificaciones recientes
 
-Actualizacion documental del handoff:
+Modulo servicios, proyectos y categorias:
 
 ```bash
-git status -sb
-git diff
+./vendor/bin/pest tests/Feature
+./vendor/bin/pint --test
+npm run build
 ```
 
 Resultado:
 
-- Antes de editar este archivo, la rama `feat/theme-settings` estaba sincronizada con `origin/feat/theme-settings`.
-- No habia cambios locales ni commits pendientes de push.
-- No se ejecutaron pruebas de aplicacion para esta actualizacion porque solo cambia documentacion.
+- `./vendor/bin/pest tests/Feature`: 60 tests pasan, 247 assertions.
+- `./vendor/bin/pint --test`: pasa, 97 archivos revisados.
+- `npm run build`: pasa.
 
-Verificaciones de aplicacion mas recientes:
+Migracion local aplicada para crear tablas del modulo:
+
+```bash
+php artisan migrate
+```
+
+Resultado:
+
+- `2026_06_10_000009_create_categories_table`: ran.
+- `2026_06_10_000010_create_services_table`: ran.
+- `2026_06_10_000011_create_projects_table`: ran.
+- Confirmado con `php artisan migrate:status` y `Schema::hasTable(...)` para `categories`, `services` y `projects`.
+
+Seeder demo ejecutado localmente para poblar ejemplos:
+
+```bash
+php artisan db:seed --class=DemoContentSeeder
+```
+
+Resultado:
+
+- `categories`: 3 registros demo.
+- `services`: 3 registros demo.
+- `projects`: 3 registros demo.
+- Confirmado con conteos Eloquent y listados de slugs desde Tinker.
+
+Verificaciones anteriores de aplicacion:
 
 Ejecutadas despues de implementar formularios por tipo de seccion:
 
@@ -148,35 +190,32 @@ La migracion `2026_06_10_000008_add_theme_to_site_settings_table` agrega `site_s
 
 ## Siguiente paso recomendado
 
-Servicios, proyectos y categorias.
+Formulario publico de contacto con Resend.
 
 Objetivo:
 
-- Crear modelos, migraciones, factories, controladores y vistas dashboard para `categories`, `services` y `projects`.
-- Mantener Blade + TailwindCSS, sin React, Vue, Inertia ni Filament.
-- Permitir que administradores y editores gestionen categorias, servicios y proyectos.
-- Mantener `site_id` en categorias, servicios y proyectos para compatibilidad monositio/futuro crecimiento.
-- Crear slugs normalizados y unicos por sitio para servicios y proyectos.
-- Asociar servicios/proyectos a categorias opcionales.
-- Incluir imagen principal opcional desde media/ruta para servicios y proyectos.
-- Crear render publico de listado y detalle para `/servicios`, `/servicios/{slug}`, `/proyectos` y `/proyectos/{slug}`.
-- Actualizar secciones publicas `services` y `projects` para mostrar elementos reales en vez de placeholders.
+- Implementar formulario publico de contacto usando Resend.
+- Mantener validacion server-side obligatoria.
+- Agregar honeypot y rate limiting.
+- Campos minimos: nombre, correo y mensaje; telefono opcional.
+- No guardar leads/mensajes en base de datos durante el MVP.
+- Cubrir con pruebas Feature: validacion, honeypot, rate limit basico y envio mockeado.
 
 ## Pendientes posteriores
 
-- Formulario publico de contacto con Resend.
 - Checklist de despliegue con SQLite, backups, storage persistente y SSL.
 - Opcional: si el editor de secciones crece demasiado, extraer carga de partials por tipo a un endpoint liviano que devuelva HTML.
 
 ## Notas operativas
 
-- `main` remoto ya contiene configuracion general, gestion de usuarios, media, paginas y secciones.
+- `main` remoto ya contiene configuracion general, gestion de usuarios, media, paginas, secciones, tema visual y formularios por tipo de seccion.
 - `feat/public-render` contiene el render publico con Blade y fue subido al remoto con commit `f88a97f`.
 - `feat/theme-settings` contiene configuracion visual de colores/tipografia y fue subido al remoto con commit `a1b0c25`.
 - `feat: agregar formularios por tipo de seccion` agrega formularios especificos por tipo y selector basico de media para galeria con commit `961969c`.
 - `319d6cf docs: actualizar handoff de secciones` ya estaba sincronizado con `origin/feat/theme-settings` antes de esta actualizacion documental.
-- Pull request activo de `feat/theme-settings` hacia `main`: https://github.com/rocouv/entia-cms/pull/11
-- Antes del siguiente modulo, crear rama desde la rama integrada aprobada. Si `feat/theme-settings` aun no fue mergeada, la siguiente rama puede partir de ella para conservar el sistema visual.
+- Pull request `feat/theme-settings` hacia `main`: https://github.com/rocouv/entia-cms/pull/11, integrado en `main` con commit `7361e31`.
+- Rama actual de trabajo: `feat/services-projects`, creada desde `origin/main`.
+- `feat/services-projects` agrega categorias, servicios, proyectos, dashboard CRUD, rutas publicas y secciones publicas reales. Pendiente de commit, push y PR.
 - No commitear `.env`, bases SQLite con datos locales, `vendor`, `node_modules` ni artefactos privados de storage.
 - Si se prueba media localmente, ejecutar `php artisan storage:link` si `public/storage` no existe.
-- Si se actualiza una base existente, ejecutar `php artisan migrate` para agregar `site_settings.theme` antes de guardar configuracion visual.
+- Si se actualiza una base existente, ejecutar `php artisan migrate` para crear `categories`, `services` y `projects` ademas de migraciones previas.
