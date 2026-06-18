@@ -115,4 +115,11 @@ return [
         'name' => env('MAIL_FROM_NAME', env('APP_NAME', 'Laravel')),
     ],
 
+    'contact' => [
+        'mailer' => env('CONTACT_MAILER', 'resend'),
+        'from_address' => env('CONTACT_FROM_EMAIL', env('MAIL_FROM_ADDRESS', 'hello@example.com')),
+        'from_name' => env('CONTACT_FROM_NAME', env('MAIL_FROM_NAME', env('APP_NAME', 'Entia'))),
+        'to_address' => env('CONTACT_TO_EMAIL', env('ENTIA_SITE_CONTACT_EMAIL')),
+    ],
+
 ];
