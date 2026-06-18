@@ -7,37 +7,37 @@ Entia CMS esta en fase de edicion de secciones y modulos de contenido del MVP. E
 Rama actual:
 
 ```txt
-feat/services-projects
+feat/contact-resend
 ```
 
 Ultimo commit base remoto:
 
 ```txt
-7361e31 Merge pull request #11 from rocouv/feat/theme-settings
+6e4f63f docs: agregar enlace del pr de servicios
 ```
 
 Estado del modulo actual:
 
 ```txt
-Servicios, proyectos y categorias implementados, commiteados y subidos en feat/services-projects.
+Formulario publico de contacto con Resend implementado localmente en feat/contact-resend, pendiente de commit/push/PR.
 ```
 
 Rama remota:
 
 ```txt
-origin/feat/services-projects
+Sin rama remota para feat/contact-resend. Rama creada desde feat/services-projects.
 ```
 
 Estado de sincronizacion:
 
 ```txt
-feat/services-projects sincronizada con origin/feat/services-projects.
+Cambios locales verificados, pendientes de versionar.
 ```
 
 Pull request:
 
 ```txt
-https://github.com/rocouv/entia-cms/pull/12
+Pendiente de crear para feat/contact-resend.
 ```
 
 ## Funcionalidades implementadas
@@ -83,7 +83,7 @@ https://github.com/rocouv/entia-cms/pull/12
   - `gallery`: grilla de imagenes con efecto hover.
   - `services`: grilla publica de servicios publicados, con filtro opcional por categoria y limite.
   - `projects`: grilla publica de proyectos publicados, con filtro opcional por categoria y limite.
-  - `contact`: seccion de contacto con placeholder de formulario.
+  - `contact`: seccion de contacto con formulario publico real.
   - `faq`: acordeon de preguntas y respuestas.
 - Vista faltante no rompe la pagina; solo muestra mensaje de debug en entorno local.
 - SEO basico: `meta_title` y `meta_description` desde la pagina o configuracion general.
@@ -119,8 +119,33 @@ https://github.com/rocouv/entia-cms/pull/12
 - Secciones publicas `services` y `projects` ya muestran registros reales publicados en vez de placeholders.
 - Formularios de secciones `services` y `projects` usan selector de categorias activas del sitio actual.
 - `DemoContentSeeder` ahora crea categorias, servicios y proyectos demo realistas para Lumina Publicidad.
+- Formulario publico de contacto disponible en secciones `contact` cuando `show_form = true`.
+- Ruta publica `POST /contacto` agregada con middleware `throttle:3,1`.
+- Validacion server-side de contacto mediante `ContactRequest`: nombre, correo y mensaje requeridos; telefono opcional; honeypot `website`.
+- Envio de contacto mediante `ContactMailable` usando el mailer configurado en `mail.contact.mailer`, por defecto `resend`.
+- Destinatario de contacto desde `CONTACT_TO_EMAIL` o, si no existe, desde `site_settings.contact_email`.
+- No se guardan mensajes de contacto en base de datos durante el MVP.
+- Errores de envio se registran en logs sin exponer detalles internos al visitante.
+- `.env.example` documenta `RESEND_API_KEY`, `CONTACT_FROM_EMAIL`, `CONTACT_FROM_NAME` y `CONTACT_TO_EMAIL`.
+- Dependencia `resend/resend-php` instalada para el transport `resend` de Laravel.
 
 ## Verificaciones recientes
+
+Modulo formulario publico de contacto con Resend:
+
+```bash
+./vendor/bin/pest tests/Feature/ContactTest.php
+./vendor/bin/pest tests/Feature
+./vendor/bin/pint
+npm run build
+```
+
+Resultado:
+
+- `./vendor/bin/pest tests/Feature/ContactTest.php`: 6 tests pasan, 28 assertions.
+- `./vendor/bin/pest tests/Feature`: 66 tests pasan, 275 assertions.
+- `./vendor/bin/pint`: pasa, 101 archivos formateados/revisados.
+- `npm run build`: pasa.
 
 Modulo servicios, proyectos y categorias:
 
@@ -190,20 +215,18 @@ La migracion `2026_06_10_000008_add_theme_to_site_settings_table` agrega `site_s
 
 ## Siguiente paso recomendado
 
-Formulario publico de contacto con Resend.
+Checklist de despliegue con SQLite, backups, storage persistente y SSL.
 
 Objetivo:
 
-- Implementar formulario publico de contacto usando Resend.
-- Mantener validacion server-side obligatoria.
-- Agregar honeypot y rate limiting.
-- Campos minimos: nombre, correo y mensaje; telefono opcional.
-- No guardar leads/mensajes en base de datos durante el MVP.
-- Cubrir con pruebas Feature: validacion, honeypot, rate limit basico y envio mockeado.
+- Documentar despliegue inicial con SQLite.
+- Definir storage persistente para media y base SQLite.
+- Agregar checklist de backups.
+- Cubrir dominio real del cliente, SSL y variables de entorno requeridas.
+- Dejar claro el camino futuro para migrar a MySQL si el proyecto crece.
 
 ## Pendientes posteriores
 
-- Checklist de despliegue con SQLite, backups, storage persistente y SSL.
 - Opcional: si el editor de secciones crece demasiado, extraer carga de partials por tipo a un endpoint liviano que devuelva HTML.
 
 ## Notas operativas
@@ -214,9 +237,11 @@ Objetivo:
 - `feat: agregar formularios por tipo de seccion` agrega formularios especificos por tipo y selector basico de media para galeria con commit `961969c`.
 - `319d6cf docs: actualizar handoff de secciones` ya estaba sincronizado con `origin/feat/theme-settings` antes de esta actualizacion documental.
 - Pull request `feat/theme-settings` hacia `main`: https://github.com/rocouv/entia-cms/pull/11, integrado en `main` con commit `7361e31`.
-- Rama actual de trabajo: `feat/services-projects`, creada desde `origin/main`.
+- Rama previa de trabajo: `feat/services-projects`, creada desde `origin/main`.
 - `feat/services-projects` agrega categorias, servicios, proyectos, dashboard CRUD, rutas publicas y secciones publicas reales con commit `56f1859`.
 - Pull request activo de `feat/services-projects` hacia `main`: https://github.com/rocouv/entia-cms/pull/12
+- Rama actual de trabajo: `feat/contact-resend`, creada desde `feat/services-projects`.
+- Para envio real de contacto, configurar `RESEND_API_KEY` y `CONTACT_TO_EMAIL` o definir correo de contacto en configuracion del sitio.
 - No commitear `.env`, bases SQLite con datos locales, `vendor`, `node_modules` ni artefactos privados de storage.
 - Si se prueba media localmente, ejecutar `php artisan storage:link` si `public/storage` no existe.
 - Si se actualiza una base existente, ejecutar `php artisan migrate` para crear `categories`, `services` y `projects` ademas de migraciones previas.

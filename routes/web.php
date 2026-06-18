@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\MediaController;
 use App\Http\Controllers\Dashboard\PageController;
@@ -18,6 +19,7 @@ Route::get('/servicios', [PublicController::class, 'services'])->name('services.
 Route::get('/servicios/{slug}', [PublicController::class, 'service'])->name('services.show');
 Route::get('/proyectos', [PublicController::class, 'projects'])->name('projects.index');
 Route::get('/proyectos/{slug}', [PublicController::class, 'project'])->name('projects.show');
+Route::post('/contacto', [ContactController::class, 'store'])->middleware('throttle:3,1')->name('contact.store');
 
 Route::middleware('guest')->group(function () {
     Route::get('/login', [LoginController::class, 'create'])->name('login');
