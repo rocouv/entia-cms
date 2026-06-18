@@ -1,11 +1,11 @@
 <x-layouts.public title="Proyectos" meta-description="Proyectos publicados del sitio.">
     <section class="bg-surface-container-lowest py-3xl">
         <div class="mx-auto max-w-7xl px-6">
-            <div class="max-w-3xl">
+            <div class="max-w-none">
                 <p class="text-label-sm uppercase tracking-[0.2em] text-on-surface-variant">Proyectos</p>
                 <h1 class="mt-3 text-headline-xl text-primary">Proyectos</h1>
-                <p class="mt-4 text-body-lg text-on-surface-variant">
-                    Casos y trabajos publicados desde el panel administrativo del sitio.
+                <p class="mt-4 max-w-none text-body-lg leading-relaxed text-on-surface-variant">
+                    Conoce una seleccion de proyectos publicados, casos de trabajo y resultados representativos que muestran como se aplican las soluciones en contextos reales.
                 </p>
             </div>
         </div>

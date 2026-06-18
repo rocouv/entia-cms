@@ -1,16 +1,16 @@
 <section class="bg-{{ $settings['background_color'] ?? 'surface-container-lowest' }} py-3xl">
-    <div class="mx-auto grid max-w-6xl gap-10 px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-        <div>
+    <div class="mx-auto max-w-5xl px-6">
+        <div class="mx-auto max-w-5xl text-center">
             @if($content['title'] ?? false)
                 <h2 class="text-headline-lg font-bold">{{ $content['title'] }}</h2>
             @endif
             @if($content['body'] ?? false)
-                <p class="mt-4 text-body-lg text-on-surface-variant">{{ $content['body'] }}</p>
+                <p class="mt-4 max-w-none text-body-lg leading-relaxed text-on-surface-variant">{{ $content['body'] }}</p>
             @endif
         </div>
 
         @if($content['show_form'] ?? false)
-            <form method="POST" action="{{ route('contact.store') }}" class="rounded-2xl border border-outline-variant bg-surface p-6 text-left shadow-sm">
+            <form method="POST" action="{{ route('contact.store') }}" class="mt-10 rounded-2xl border border-outline-variant bg-surface p-6 text-left shadow-sm">
                 @csrf
 
                 @if(session('status'))
