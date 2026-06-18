@@ -19,25 +19,25 @@ Ultimo commit base remoto:
 Estado del modulo actual:
 
 ```txt
-Formulario publico de contacto con Resend implementado localmente en feat/contact-resend, pendiente de commit/push/PR.
+Formulario publico de contacto con Resend implementado, commiteado y subido en feat/contact-resend.
 ```
 
 Rama remota:
 
 ```txt
-Sin rama remota para feat/contact-resend. Rama creada desde feat/services-projects.
+origin/feat/contact-resend
 ```
 
 Estado de sincronizacion:
 
 ```txt
-Cambios locales verificados, pendientes de versionar.
+feat/contact-resend sincronizada con origin/feat/contact-resend.
 ```
 
 Pull request:
 
 ```txt
-Pendiente de crear para feat/contact-resend.
+https://github.com/rocouv/entia-cms/pull/13
 ```
 
 ## Funcionalidades implementadas
@@ -240,7 +240,8 @@ Objetivo:
 - Rama previa de trabajo: `feat/services-projects`, creada desde `origin/main`.
 - `feat/services-projects` agrega categorias, servicios, proyectos, dashboard CRUD, rutas publicas y secciones publicas reales con commit `56f1859`.
 - Pull request activo de `feat/services-projects` hacia `main`: https://github.com/rocouv/entia-cms/pull/12
-- Rama actual de trabajo: `feat/contact-resend`, creada desde `feat/services-projects`.
+- Rama actual de trabajo: `feat/contact-resend`, creada desde `feat/services-projects`, con commit `5047016`.
+- Pull request activo de `feat/contact-resend` hacia `feat/services-projects`: https://github.com/rocouv/entia-cms/pull/13
 - Para envio real de contacto, configurar `RESEND_API_KEY` y `CONTACT_TO_EMAIL` o definir correo de contacto en configuracion del sitio.
 - No commitear `.env`, bases SQLite con datos locales, `vendor`, `node_modules` ni artefactos privados de storage.
 - Si se prueba media localmente, ejecutar `php artisan storage:link` si `public/storage` no existe.
