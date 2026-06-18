@@ -7,37 +7,37 @@ Entia CMS esta en fase de edicion de secciones y modulos de contenido del MVP. E
 Rama actual:
 
 ```txt
-feat/contact-resend
+ui/public-text-layout
 ```
 
 Ultimo commit base remoto:
 
 ```txt
-6e4f63f docs: agregar enlace del pr de servicios
+1824e8a ui: ajustar textos publicos
 ```
 
 Estado del modulo actual:
 
 ```txt
-Formulario publico de contacto con Resend implementado, commiteado y subido en feat/contact-resend.
+Ajustes visuales publicos de textos y layout implementados, commiteados y subidos en ui/public-text-layout.
 ```
 
 Rama remota:
 
 ```txt
-origin/feat/contact-resend
+origin/ui/public-text-layout
 ```
 
 Estado de sincronizacion:
 
 ```txt
-feat/contact-resend sincronizada con origin/feat/contact-resend.
+ui/public-text-layout sincronizada con origin/ui/public-text-layout.
 ```
 
 Pull request:
 
 ```txt
-https://github.com/rocouv/entia-cms/pull/13
+https://github.com/rocouv/entia-cms/pull/15
 ```
 
 ## Funcionalidades implementadas
@@ -128,8 +128,24 @@ https://github.com/rocouv/entia-cms/pull/13
 - Errores de envio se registran en logs sin exponer detalles internos al visitante.
 - `.env.example` documenta `RESEND_API_KEY`, `CONTACT_FROM_EMAIL`, `CONTACT_FROM_NAME` y `CONTACT_TO_EMAIL`.
 - Dependencia `resend/resend-php` instalada para el transport `resend` de Laravel.
+- Textos introductorios de `/servicios` y `/proyectos` ampliados para usar el ancho disponible y evitar lineas excesivamente cortas.
+- Seccion publica `contact` muestra la informacion arriba y el formulario debajo, manteniendo el texto superior con ancho amplio.
 
 ## Verificaciones recientes
+
+Ajustes visuales publicos de textos y contacto:
+
+```bash
+./vendor/bin/pest tests/Feature/ContactTest.php tests/Feature/ServiceManagementTest.php tests/Feature/ProjectManagementTest.php
+npm run build
+git diff --check
+```
+
+Resultado:
+
+- `./vendor/bin/pest tests/Feature/ContactTest.php tests/Feature/ServiceManagementTest.php tests/Feature/ProjectManagementTest.php`: 20 tests pasan, 83 assertions.
+- `npm run build`: pasa.
+- `git diff --check`: pasa.
 
 Modulo formulario publico de contacto con Resend:
 
@@ -240,8 +256,10 @@ Objetivo:
 - Rama previa de trabajo: `feat/services-projects`, creada desde `origin/main`.
 - `feat/services-projects` agrega categorias, servicios, proyectos, dashboard CRUD, rutas publicas y secciones publicas reales con commit `56f1859`.
 - Pull request activo de `feat/services-projects` hacia `main`: https://github.com/rocouv/entia-cms/pull/12
-- Rama actual de trabajo: `feat/contact-resend`, creada desde `feat/services-projects`, con commit `5047016`.
+- Rama previa de trabajo: `feat/contact-resend`, creada desde `feat/services-projects`, con commit `5047016`.
 - Pull request activo de `feat/contact-resend` hacia `feat/services-projects`: https://github.com/rocouv/entia-cms/pull/13
+- Rama actual de trabajo: `ui/public-text-layout`, creada desde `feat/contact-resend`, con commit `1824e8a`.
+- Pull request activo de `ui/public-text-layout` hacia `feat/contact-resend`: https://github.com/rocouv/entia-cms/pull/15
 - Para envio real de contacto, configurar `RESEND_API_KEY` y `CONTACT_TO_EMAIL` o definir correo de contacto en configuracion del sitio.
 - No commitear `.env`, bases SQLite con datos locales, `vendor`, `node_modules` ni artefactos privados de storage.
 - Si se prueba media localmente, ejecutar `php artisan storage:link` si `public/storage` no existe.
