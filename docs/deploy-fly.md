@@ -4,12 +4,20 @@ Entia puede desplegarse en Fly.io con SQLite usando un volume persistente para l
 
 ## Crear app y volume
 
+No ejecutes `fly launch --config ./`: `--config` debe apuntar al archivo `fly.toml`, no al directorio del proyecto. Como este repo ya incluye `fly.toml`, puedes crear la app manualmente y desplegar con esa config.
+
 ```bash
 fly apps create entia-cms-demo
-fly volumes create entia_data --region mia --size 3 --app entia-cms-demo
+fly volumes create entia_data --region dfw --size 3 --app entia-cms-demo
 ```
 
 Actualiza `app = "entia-cms"` en `fly.toml` con el nombre real de la app creada.
+
+Si prefieres usar `launch`, usa el archivo de config explicitamente:
+
+```bash
+fly launch --config fly.toml --name entia-cms-demo --region dfw --no-deploy
+```
 
 ## Configurar secretos
 
