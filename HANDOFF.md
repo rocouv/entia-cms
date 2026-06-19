@@ -7,37 +7,37 @@ Entia CMS esta en fase de edicion de secciones y modulos de contenido del MVP. E
 Rama actual:
 
 ```txt
-feat/contact-resend
+main
 ```
 
 Ultimo commit base remoto:
 
 ```txt
-6e4f63f docs: agregar enlace del pr de servicios
+9096c1a Merge pull request #14 from rocouv/feat/services-projects
 ```
 
 Estado del modulo actual:
 
 ```txt
-Formulario publico de contacto con Resend implementado, commiteado y subido en feat/contact-resend.
+Configuracion inicial de despliegue en Fly.io agregada directamente en main.
 ```
 
 Rama remota:
 
 ```txt
-origin/feat/contact-resend
+origin/main
 ```
 
 Estado de sincronizacion:
 
 ```txt
-feat/contact-resend sincronizada con origin/feat/contact-resend.
+main actualizado desde origin/main antes de configurar Fly.io.
 ```
 
 Pull request:
 
 ```txt
-https://github.com/rocouv/entia-cms/pull/13
+Sin PR: cambio solicitado directamente en main.
 ```
 
 ## Funcionalidades implementadas
@@ -128,6 +128,12 @@ https://github.com/rocouv/entia-cms/pull/13
 - Errores de envio se registran en logs sin exponer detalles internos al visitante.
 - `.env.example` documenta `RESEND_API_KEY`, `CONTACT_FROM_EMAIL`, `CONTACT_FROM_NAME` y `CONTACT_TO_EMAIL`.
 - Dependencia `resend/resend-php` instalada para el transport `resend` de Laravel.
+- Configuracion inicial de Fly.io agregada con `Dockerfile`, `fly.toml`, `.dockerignore`, scripts bajo `docker/` y guia `docs/deploy-fly.md`.
+- Fly.io usa un volume persistente `entia_data` montado en `/data`.
+- SQLite en Fly.io vive en `/data/database/database.sqlite`.
+- Media publica persistente vive en `/data/storage/app/public` y se enlaza a `storage/app/public` durante el arranque.
+- El contenedor ejecuta migraciones, `storage:link` y caches de Laravel al arrancar.
+- Los seeders son opcionales mediante `ENTIA_RUN_SEEDERS=true` para evitar sobrescribir contenido demo en cada deploy.
 
 ## Verificaciones recientes
 
