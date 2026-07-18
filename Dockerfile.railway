@@ -38,6 +38,10 @@ FROM php:8.4-fpm-alpine
 
 WORKDIR /var/www/html
 
+ENV DB_CONNECTION=sqlite \
+    DB_DATABASE=/data/database/database.sqlite \
+    FILESYSTEM_DISK=public
+
 RUN apk add --no-cache \
         bash \
         curl \

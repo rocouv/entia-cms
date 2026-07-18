@@ -21,8 +21,8 @@ ln -s /data/database/database.sqlite database/database.sqlite
 rm -rf storage/app/public
 ln -s /data/storage/app/public storage/app/public
 
-php artisan optimize:clear --no-interaction
 php artisan migrate --force --no-interaction
+php artisan optimize:clear --no-interaction
 
 if [ "${ENTIA_RUN_SEEDERS:-false}" = "true" ]; then
     php artisan db:seed --force --no-interaction
