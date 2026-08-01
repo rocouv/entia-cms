@@ -13,7 +13,7 @@
                     </p>
                     <h1 class="mt-3 text-headline-xl text-primary">{{ $service->title }}</h1>
                     @if($service->excerpt)
-                        <p class="mt-5 max-w-3xl text-body-lg text-on-surface-variant">{{ $service->excerpt }}</p>
+                        <p class="mt-5 w-full text-body-lg text-on-surface-variant">{{ $service->excerpt }}</p>
                     @endif
                 </div>
 
