@@ -1,10 +1,10 @@
 <x-layouts.public title="Servicios" meta-description="Servicios publicados del sitio.">
     <section class="bg-surface-container-lowest py-3xl">
         <div class="mx-auto max-w-7xl px-6">
-            <div class="max-w-3xl">
+            <div>
                 <p class="text-label-sm uppercase tracking-[0.2em] text-on-surface-variant">Servicios</p>
                 <h1 class="mt-3 text-headline-xl text-primary">Servicios</h1>
-                <p class="mt-4 text-body-lg text-on-surface-variant">
+                <p class="mt-4 w-full text-body-lg text-on-surface-variant">
                     Soluciones publicadas desde el panel administrativo del sitio.
                 </p>
             </div>
