@@ -24,7 +24,19 @@ ln -s /data/storage/app/public storage/app/public
 php artisan migrate --force --no-interaction
 php artisan optimize:clear --except=cache --no-interaction
 
-if [ "${ENTIA_RUN_SEEDERS:-false}" = "true" ]; then
+seed_mode="${ENTIA_RUN_SEEDERS:-auto}"
+
+if [ "$seed_mode" = "auto" ]; then
+    site_state="$(php artisan tinker --execute='echo \App\Models\Site::query()->exists() ? "existing" : "empty";' 2>/dev/null | tr -d '\r\n')"
+
+    if [ "$site_state" = "empty" ]; then
+        seed_mode="true"
+    else
+        seed_mode="false"
+    fi
+fi
+
+if [ "$seed_mode" = "true" ]; then
     php artisan db:seed --force --no-interaction
 fi
 
