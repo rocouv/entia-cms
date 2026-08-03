@@ -21,6 +21,18 @@ ln -s /data/database/database.sqlite database/database.sqlite
 rm -rf storage/app/public
 ln -s /data/storage/app/public storage/app/public
 
+if [ -z "${APP_KEY:-}" ] || [ "${APP_KEY}" = "base64:" ]; then
+    if [ -s /data/.app_key ]; then
+        APP_KEY="$(tr -d '\r\n' < /data/.app_key)"
+    else
+        APP_KEY="$(php artisan key:generate --show --no-interaction)"
+        umask 077
+        printf '%s' "$APP_KEY" > /data/.app_key
+    fi
+
+    export APP_KEY
+fi
+
 php artisan migrate --force --no-interaction
 php artisan optimize:clear --except=cache --no-interaction
 

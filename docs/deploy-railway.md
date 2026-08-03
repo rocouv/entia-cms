@@ -34,7 +34,7 @@ Configura estas variables en Railway. Los secretos no se guardan en Git:
 ```env
 APP_ENV=production
 APP_DEBUG=false
-APP_KEY=base64:...
+# APP_KEY=base64:...  # opcional; si se omite se genera en /data/.app_key
 APP_URL=https://tu-dominio.up.railway.app
 PORT=8080
 
@@ -48,7 +48,9 @@ QUEUE_CONNECTION=database
 FILESYSTEM_DISK=local
 ```
 
-`APP_KEY` se genera localmente con:
+Si defines `APP_KEY` en Railway, esa clave tiene prioridad. Si la omites, `docker/start.sh` genera una clave en el primer arranque y la guarda en `/data/.app_key`. Los reinicios y redeploys reutilizan esa misma clave mientras el Volume de Railway permanezca montado en `/data`.
+
+Para generar una clave manualmente:
 
 ```bash
 php artisan key:generate --show
@@ -66,6 +68,8 @@ MAIL_FROM_NAME=...
 ```
 
 No dejes `CACHE_STORE=database` definido en Railway. El valor recomendado para este despliegue es `file`.
+
+No elimines el archivo `/data/.app_key` ni el Volume asociado: hacerlo generaria una clave nueva y cerraria las sesiones existentes.
 
 ## Bootstrap inicial
 
