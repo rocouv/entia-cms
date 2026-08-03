@@ -1,0 +1,99 @@
+# Despliegue en Railway
+
+Entia incluye `railway.toml` y `Dockerfile.railway` para que Railway use el contenedor correcto y compruebe el endpoint `/up` automaticamente.
+
+## Configuracion del servicio
+
+Conecta el repositorio `rocouv/entia-cms` y usa la rama `main`. Railway toma desde el repositorio:
+
+- `railway.toml` para la configuracion de build y health check.
+- `Dockerfile.railway` para compilar PHP, assets, Nginx y Supervisor.
+- `docker/start.sh` para migraciones, bootstrap inicial y caches.
+
+No hace falta configurar un start command manual. El Dockerfile ejecuta `entia-start`.
+
+## Volume persistente
+
+Crea un Volume de Railway montado en:
+
+```txt
+/data
+```
+
+El volumen conserva:
+
+- `/data/database/database.sqlite`
+- `/data/storage/app/public`
+
+Sin este volumen, la base SQLite y los archivos de media se pierden al crear una nueva instancia o desplegar una nueva imagen.
+
+## Variables requeridas
+
+Configura estas variables en Railway. Los secretos no se guardan en Git:
+
+```env
+APP_ENV=production
+APP_DEBUG=false
+APP_KEY=base64:...
+APP_URL=https://tu-dominio.up.railway.app
+PORT=8080
+
+DB_CONNECTION=sqlite
+DB_DATABASE=/data/database/database.sqlite
+LOG_CHANNEL=stderr
+LOG_LEVEL=info
+CACHE_STORE=file
+SESSION_DRIVER=database
+QUEUE_CONNECTION=database
+FILESYSTEM_DISK=local
+```
+
+`APP_KEY` se genera localmente con:
+
+```bash
+php artisan key:generate --show
+```
+
+Tambien agrega las variables de correo si usaras el formulario de contacto:
+
+```env
+RESEND_API_KEY=...
+CONTACT_FROM_EMAIL=...
+CONTACT_FROM_NAME=...
+CONTACT_TO_EMAIL=...
+MAIL_FROM_ADDRESS=...
+MAIL_FROM_NAME=...
+```
+
+No dejes `CACHE_STORE=database` definido en Railway. El valor recomendado para este despliegue es `file`.
+
+## Bootstrap inicial
+
+Al arrancar, `docker/start.sh` ejecuta migraciones. Si la base no contiene ningun sitio, detecta la instalacion vacia y ejecuta automaticamente `DatabaseSeeder`, que crea:
+
+- Roles administrador y editor.
+- Sitio y configuracion inicial.
+- Usuario administrador.
+- Pagina home y contenido demo.
+- Categorias, servicios y proyectos demo.
+
+No es necesario replicar manualmente `ENTIA_RUN_SEEDERS=true` en cada instancia. El comportamiento puede controlarse con:
+
+```env
+ENTIA_RUN_SEEDERS=auto
+```
+
+Valores disponibles:
+
+- `auto`: si no existe un sitio, ejecuta seeders; si ya existe, no modifica contenido.
+- `true`: fuerza los seeders en cada arranque. Usarlo solo para una instalacion controlada.
+- `false`: desactiva los seeders.
+
+Para instalaciones nuevas se recomienda dejar `ENTIA_RUN_SEEDERS` sin definir o usar `auto`.
+
+## Verificacion
+
+- `/up` debe responder correctamente para el health check.
+- `/` debe mostrar la home.
+- `/login` debe mostrar el acceso administrativo.
+- `/dashboard` debe requerir autenticacion.
