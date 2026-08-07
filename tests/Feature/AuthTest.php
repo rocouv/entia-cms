@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\Page;
 use App\Models\Role;
+use App\Models\SiteSetting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -29,6 +31,19 @@ it('redirects guests away from the dashboard', function () {
         ->assertRedirect('/login');
 });
 
+it('does not show the dashboard link to public visitors', function () {
+    $site = SiteSetting::factory()->create()->site;
+    Page::factory()->for($site)->create([
+        'is_home' => true,
+        'slug' => 'inicio',
+    ]);
+
+    $this->get('/')
+        ->assertOk()
+        ->assertDontSee('>Dashboard</a>', false)
+        ->assertDontSee('/login');
+});
+
 it('allows an administrator to sign in', function () {
     $admin = createAdminUser();
 
@@ -46,6 +61,7 @@ it('shows the protected dashboard to authenticated users', function () {
     $this->actingAs($admin)
         ->get('/dashboard')
         ->assertOk()
+        ->assertSee('dashboard-shell', false)
         ->assertSee('Bienvenido')
         ->assertSee('Administrador');
 });

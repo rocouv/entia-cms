@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
-#[Fillable(['site_id', 'category_id', 'title', 'slug', 'client_name', 'excerpt', 'body', 'image_path', 'is_published', 'is_featured', 'sort_order', 'meta_title', 'meta_description'])]
+#[Fillable(['site_id', 'category_id', 'title', 'slug', 'client_name', 'excerpt', 'body', 'image_path', 'image_settings', 'is_published', 'is_featured', 'sort_order', 'meta_title', 'meta_description'])]
 class Project extends Model
 {
     /** @use HasFactory<ProjectFactory> */
@@ -26,6 +26,7 @@ class Project extends Model
             'is_published' => 'boolean',
             'is_featured' => 'boolean',
             'sort_order' => 'integer',
+            'image_settings' => 'array',
         ];
     }
 

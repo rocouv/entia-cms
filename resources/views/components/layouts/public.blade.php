@@ -12,13 +12,19 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-        <x-theme-style :site-settings="$siteSettings" />
+        <x-theme-style :site-settings="$siteSettings" mode="public" />
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="min-h-screen bg-surface font-sans text-on-surface antialiased">
+    <body class="public-site min-h-screen bg-surface font-sans text-on-surface antialiased">
         <nav class="fixed inset-x-0 top-0 z-50 border-b border-outline-variant bg-surface/95 backdrop-blur">
             <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-                <a href="/" class="text-headline-lg font-black text-primary">{{ $siteSettings?->site_name ?? config('app.name') }}</a>
+                <a href="/" class="flex items-center gap-3 text-headline-lg font-black text-primary">
+                    @if($siteSettings?->logoUrl())
+                        <img src="{{ $siteSettings->logoUrl() }}" alt="{{ $siteSettings->site_name ?? config('app.name') }}" class="max-h-10 w-auto max-w-48 object-contain">
+                    @else
+                        <span>{{ $siteSettings?->site_name ?? config('app.name') }}</span>
+                    @endif
+                </a>
                 <div class="hidden items-center gap-8 text-body-md md:flex">
                     @foreach($navigationPages as $navPage)
                         <a href="{{ $navPage->is_home ? '/' : '/' . $navPage->slug }}"
@@ -29,8 +35,6 @@
                 </div>
                 @auth
                     <a href="{{ route('dashboard') }}" class="rounded bg-primary px-6 py-2 text-label-md text-on-primary transition hover:opacity-80">Dashboard</a>
-                @else
-                    <a href="{{ route('login') }}" class="rounded bg-primary px-6 py-2 text-label-md text-on-primary transition hover:opacity-80">Dashboard</a>
                 @endauth
             </div>
         </nav>

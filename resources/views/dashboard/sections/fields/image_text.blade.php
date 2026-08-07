@@ -16,6 +16,11 @@
     @error('content.image') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
 </label>
 
+@include('dashboard.sections.fields.image-options', [
+    'fieldPrefix' => 'content[image_settings]',
+    'imageValues' => data_get($content, 'image_settings', []),
+])
+
 <label class="grid gap-2">
     <span class="text-label-md text-on-surface">Posicion de imagen</span>
     <select name="content[image_position]" class="h-10 rounded border border-outline-variant bg-surface px-3 text-body-md outline-none transition focus:border-primary">

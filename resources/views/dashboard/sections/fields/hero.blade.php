@@ -4,6 +4,17 @@
     @error('content.title') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
 </label>
 
+@include('dashboard.sections.fields.image-options', [
+    'fieldPrefix' => 'content[image_settings]',
+    'imageValues' => data_get($content, 'image_settings', []),
+])
+
+<label class="grid gap-2">
+    <span class="text-label-md text-on-surface">Opacidad de superposicion (%)</span>
+    <input name="content[overlay_opacity]" type="number" value="{{ data_get($content, 'overlay_opacity', 40) }}" min="0" max="100" step="1" class="h-10 rounded border border-outline-variant bg-surface px-3 text-body-md outline-none transition focus:border-primary">
+    @error('content.overlay_opacity') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
+</label>
+
 <label class="grid gap-2 sm:col-span-2">
     <span class="text-label-md text-on-surface">Subtitulo</span>
     <input name="content[subtitle]" value="{{ data_get($content, 'subtitle') }}" class="h-10 rounded border border-outline-variant bg-surface px-3 text-body-md outline-none transition focus:border-primary">

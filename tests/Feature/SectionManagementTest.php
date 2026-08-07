@@ -119,6 +119,38 @@ it('allows authenticated users to create sections with typed content fields', fu
         ]);
 });
 
+it('stores image presentation settings for image sections', function () {
+    $editor = createSectionUser();
+    $page = Page::factory()->for($editor->site)->create();
+
+    $this->actingAs($editor)
+        ->post("/dashboard/pages/{$page->id}/sections", [
+            'type' => 'hero',
+            'content' => [
+                'title' => 'Hero con imagen',
+                'image' => 'media/hero.jpg',
+                'image_settings' => [
+                    'opacity' => '72',
+                    'object_position' => 'right bottom',
+                    'fit' => 'contain',
+                ],
+                'overlay_opacity' => '18',
+            ],
+            'sort_order' => '1',
+            'is_visible' => '1',
+        ])
+        ->assertRedirect("/dashboard/pages/{$page->id}/sections");
+
+    $section = Section::query()->firstOrFail();
+
+    expect($section->content['image_settings'])->toBe([
+        'opacity' => 72,
+        'object_position' => 'right bottom',
+        'fit' => 'contain',
+    ])
+        ->and($section->content['overlay_opacity'])->toBe(18);
+});
+
 it('shows site images in gallery section fields', function () {
     $editor = createSectionUser();
     $page = Page::factory()->for($editor->site)->create();

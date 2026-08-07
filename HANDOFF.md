@@ -252,3 +252,17 @@ Objetivo:
 - No commitear `.env`, bases SQLite con datos locales, `vendor`, `node_modules` ni artefactos privados de storage.
 - Si se prueba media localmente, ejecutar `php artisan storage:link` si `public/storage` no existe.
 - Si se actualiza una base existente, ejecutar `php artisan migrate` para crear `categories`, `services` y `projects` ademas de migraciones previas.
+
+## Ajustes recientes de interfaz
+
+- Las tarjetas demo ahora incluyen cinco elementos en Inicio y Nosotros, y bloques adicionales en Servicios y Contacto.
+- El editor de tarjetas muestra tres filas base y permite agregar mas tarjetas con un boton cuando sea necesario.
+- Cada tarjeta puede eliminarse desde el editor y su indice se renumera automaticamente al quitarla.
+- Las tarjetas usan un selector con busqueda del catalogo oficial de Material Icons y sugerencias locales de respaldo; no se detectaron otros campos editoriales que requieran seleccion de icono.
+- Las imagenes de Hero, Imagen + texto y Galeria admiten opacidad, posicion focal y ajuste de imagen; Galeria guarda estos parametros por imagen.
+- Las imagenes principales de Servicios y Proyectos tambien admiten los mismos parametros mediante `image_settings`.
+- El sitio publico permite configurar un logo desde Media o mediante URL; si `logo_path` queda vacio, muestra el titulo del negocio.
+- Verificaciones de ajustes de imagen: `./vendor/bin/pest tests/Feature` (68 tests, 289 assertions), `./vendor/bin/pint --test` y `npm run build` pasan.
+- El sitio publico y el dashboard usan modos visuales separados: cada uno tiene su propia paleta configurable y el dashboard conserva tipografia Inter.
+- El enlace `Dashboard` solo aparece en la navegacion publica para usuarios autenticados; los visitantes no ven acceso al login administrativo.
+- Verificaciones: `./vendor/bin/pest tests/Feature` (67 tests, 279 assertions), `./vendor/bin/pint --test` y `npm run build` pasan.

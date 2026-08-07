@@ -102,6 +102,7 @@ it('allows administrators to update the visual theme', function () {
             'client_contact_email' => null,
             'client_contact_phone' => null,
             'site_name' => 'Diseno Vector',
+            'logo_path' => 'media/logo.svg',
             'domain' => 'disenovector.test',
             'is_active' => '1',
             'tagline' => 'Diseno grafico, impresion y soluciones visuales',
@@ -140,6 +141,11 @@ it('allows administrators to update the visual theme', function () {
                 'error_container' => '#B81414',
                 'on_error_container' => '#FFFFFF',
             ],
+            'dashboard_theme' => [
+                'background' => '#101827',
+                'primary' => '#7C9CFF',
+                'on_primary' => '#101827',
+            ],
         ])
         ->assertRedirect('/dashboard/settings');
 
@@ -150,4 +156,18 @@ it('allows administrators to update the visual theme', function () {
         ->and($theme['primary_container'])->toBe('#B81414')
         ->and($theme['secondary'])->toBe('#232323')
         ->and($theme['on_surface'])->toBe('#232323');
+
+    expect($admin->site->settings->fresh()->logo_path)->toBe('media/logo.svg');
+
+    $dashboardTheme = $admin->site->settings->fresh()->dashboard_theme;
+
+    expect($dashboardTheme['background'])->toBe('#101827')
+        ->and($dashboardTheme['primary'])->toBe('#7C9CFF')
+        ->and($dashboardTheme['on_primary'])->toBe('#101827');
+
+    $this->actingAs($admin)
+        ->get('/dashboard')
+        ->assertSee('--theme-background: #101827', false)
+        ->assertSee('--theme-primary: #7C9CFF', false)
+        ->assertSee('--color-primary: var(--theme-primary)', false);
 });

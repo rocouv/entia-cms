@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\UpdateSiteSettingsRequest;
+use App\Models\Media;
 use App\Models\Site;
 use App\Models\SiteSetting;
 use Illuminate\Http\RedirectResponse;
@@ -13,8 +14,15 @@ class SiteSettingsController extends Controller
 {
     public function edit(): View
     {
+        $site = $this->site();
+
         return view('dashboard.settings.edit', [
-            'site' => $this->site(),
+            'site' => $site,
+            'imageMedia' => Media::query()
+                ->where('site_id', $site->id)
+                ->where('mime_type', 'like', 'image/%')
+                ->latest()
+                ->get(),
         ]);
     }
 
@@ -38,6 +46,7 @@ class SiteSettingsController extends Controller
 
         $site->settings()->update([
             'site_name' => $validated['site_name'],
+            'logo_path' => $validated['logo_path'] ?? null,
             'tagline' => $validated['tagline'],
             'contact_email' => $validated['contact_email'],
             'contact_phone' => $validated['contact_phone'],
@@ -45,6 +54,11 @@ class SiteSettingsController extends Controller
             'meta_title' => $validated['meta_title'],
             'meta_description' => $validated['meta_description'],
             'theme' => $this->themeFrom($site->settings->theme ?? [], $validated['theme'] ?? []),
+            'dashboard_theme' => $this->themeFrom(
+                $site->settings->dashboard_theme ?? [],
+                $validated['dashboard_theme'] ?? [],
+                SiteSetting::DASHBOARD_THEME_DEFAULTS,
+            ),
         ]);
 
         return to_route('dashboard.settings.edit')->with('status', 'Configuracion del sitio actualizada.');
@@ -62,11 +76,11 @@ class SiteSettingsController extends Controller
      * @param  array<string, string>  $validated
      * @return array<string, string>
      */
-    private function themeFrom(array $current, array $validated): array
+    private function themeFrom(array $current, array $validated, array $defaults = SiteSetting::THEME_DEFAULTS): array
     {
         return array_intersect_key(
-            array_replace(SiteSetting::THEME_DEFAULTS, $current, $validated),
-            SiteSetting::THEME_DEFAULTS,
+            array_replace($defaults, $current, $validated),
+            $defaults,
         );
     }
 }
