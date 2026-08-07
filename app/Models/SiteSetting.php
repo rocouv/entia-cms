@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Str;
 
-#[Fillable(['site_id', 'site_name', 'tagline', 'contact_email', 'contact_phone', 'address', 'meta_title', 'meta_description', 'social_links', 'theme'])]
+#[Fillable(['site_id', 'site_name', 'logo_path', 'tagline', 'contact_email', 'contact_phone', 'address', 'meta_title', 'meta_description', 'social_links', 'theme', 'dashboard_theme'])]
 class SiteSetting extends Model
 {
     /** @use HasFactory<SiteSettingFactory> */
@@ -61,6 +62,36 @@ class SiteSetting extends Model
         'on_error_container' => '#93000a',
     ];
 
+    public const DASHBOARD_THEME_DEFAULTS = [
+        'background' => '#f4f7fb',
+        'surface' => '#ffffff',
+        'surface_container_lowest' => '#ffffff',
+        'surface_container_low' => '#f8fafc',
+        'surface_container' => '#f1f5f9',
+        'surface_container_high' => '#e7edf5',
+        'surface_container_highest' => '#dce5f0',
+        'on_surface' => '#172033',
+        'on_surface_variant' => '#526176',
+        'outline' => '#94a3b8',
+        'outline_variant' => '#d5deea',
+        'primary' => '#3157d5',
+        'on_primary' => '#ffffff',
+        'primary_container' => '#e5ebff',
+        'on_primary_container' => '#1d3b9a',
+        'secondary' => '#526176',
+        'on_secondary' => '#ffffff',
+        'secondary_container' => '#e6edf7',
+        'on_secondary_container' => '#334155',
+        'tertiary' => '#3157d5',
+        'on_tertiary' => '#ffffff',
+        'tertiary_container' => '#e5ebff',
+        'on_tertiary_container' => '#1d3b9a',
+        'error' => '#ba1a1a',
+        'on_error' => '#ffffff',
+        'error_container' => '#ffdad6',
+        'on_error_container' => '#93000a',
+    ];
+
     /**
      * Get the attributes that should be cast.
      *
@@ -71,7 +102,21 @@ class SiteSetting extends Model
         return [
             'social_links' => 'array',
             'theme' => 'array',
+            'dashboard_theme' => 'array',
         ];
+    }
+
+    public function logoUrl(): ?string
+    {
+        if (! $this->logo_path) {
+            return null;
+        }
+
+        if (Str::startsWith($this->logo_path, ['http://', 'https://', '/'])) {
+            return $this->logo_path;
+        }
+
+        return asset('storage/'.ltrim($this->logo_path, '/'));
     }
 
     /**

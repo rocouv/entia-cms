@@ -29,6 +29,7 @@ class SiteSettingFactory extends Factory
             'meta_description' => fake()->sentence(12),
             'social_links' => [],
             'theme' => SiteSetting::THEME_DEFAULTS,
+            'dashboard_theme' => SiteSetting::DASHBOARD_THEME_DEFAULTS,
         ];
     }
 }

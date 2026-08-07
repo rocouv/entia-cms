@@ -327,6 +327,16 @@ class DemoContentSeeder extends Seeder
                                     'title' => 'Medicion continua',
                                     'description' => 'Reportes claros, aprendizaje accionable y optimizacion por resultados.',
                                 ],
+                                [
+                                    'icon' => 'palette',
+                                    'title' => 'Identidad consistente',
+                                    'description' => 'Sistemas visuales que mantienen la marca reconocible en cada punto de contacto.',
+                                ],
+                                [
+                                    'icon' => 'groups',
+                                    'title' => 'Equipos alineados',
+                                    'description' => 'Criterios compartidos para que marketing, ventas y direccion avancen juntos.',
+                                ],
                             ],
                         ],
                         'settings' => ['background_color' => 'white'],
@@ -380,6 +390,20 @@ class DemoContentSeeder extends Seeder
                             'limit' => 6,
                         ],
                         'settings' => ['background_color' => 'white'],
+                    ],
+                    [
+                        'type' => 'cards',
+                        'sort_order' => 20,
+                        'content' => [
+                            'title' => 'Como podemos ayudarte',
+                            'items' => [
+                                ['icon' => 'target', 'title' => 'Enfoque estrategico', 'description' => 'Priorizamos oportunidades con impacto real para tu negocio.'],
+                                ['icon' => 'design_services', 'title' => 'Ideas que se ejecutan', 'description' => 'Convertimos conceptos en piezas listas para salir al mercado.'],
+                                ['icon' => 'speed', 'title' => 'Ritmo flexible', 'description' => 'Trabajamos por sprints o acompanamiento continuo segun tu etapa.'],
+                                ['icon' => 'insights', 'title' => 'Decisiones con datos', 'description' => 'Medimos lo importante y usamos cada resultado para mejorar.'],
+                            ],
+                        ],
+                        'settings' => ['background_color' => 'surface-container-lowest'],
                     ],
                 ],
             ],
@@ -455,6 +479,16 @@ class DemoContentSeeder extends Seeder
                                     'title' => 'Aprendizaje medible',
                                     'description' => 'Cada campana deja datos utiles para mejorar mensaje, oferta y canal.',
                                 ],
+                                [
+                                    'icon' => 'handshake',
+                                    'title' => 'Trabajo cercano',
+                                    'description' => 'Nos integramos al equipo y hacemos visibles las decisiones importantes.',
+                                ],
+                                [
+                                    'icon' => 'auto_awesome',
+                                    'title' => 'Curiosidad activa',
+                                    'description' => 'Probamos nuevas ideas sin perder de vista el objetivo de negocio.',
+                                ],
                             ],
                         ],
                         'settings' => ['background_color' => 'surface-container-lowest'],
@@ -481,6 +515,19 @@ class DemoContentSeeder extends Seeder
                             'show_form' => true,
                         ],
                         'settings' => ['background_color' => 'surface-container-lowest'],
+                    ],
+                    [
+                        'type' => 'cards',
+                        'sort_order' => 5,
+                        'content' => [
+                            'title' => 'Un buen inicio se siente asi',
+                            'items' => [
+                                ['icon' => 'chat', 'title' => 'Conversacion clara', 'description' => 'Entendemos tu reto antes de hablar de soluciones.'],
+                                ['icon' => 'route', 'title' => 'Siguiente paso concreto', 'description' => 'Recibes una recomendacion de alcance, tiempos y prioridades.'],
+                                ['icon' => 'mark_email_read', 'title' => 'Respuesta oportuna', 'description' => 'Te contactamos con contexto y sin formularios interminables.'],
+                            ],
+                        ],
+                        'settings' => ['background_color' => 'white'],
                     ],
                     [
                         'type' => 'faq',

@@ -41,6 +41,10 @@
                         <input name="content[images][media_{{ $media->id }}][selected]" type="checkbox" value="1" @checked(in_array($media->path, $selectedPaths, true)) class="mt-0.5 size-4 rounded border-outline-variant text-primary focus:ring-primary focus:ring-offset-0">
                         <span>{{ $media->alt_text ?: $media->original_name }}</span>
                     </span>
+                    @include('dashboard.sections.fields.image-options', [
+                        'fieldPrefix' => "content[images][media_{$media->id}][settings]",
+                        'imageValues' => data_get($content, "images.media_{$media->id}.settings", []),
+                    ])
                 </label>
             @endforeach
         </div>
@@ -67,6 +71,10 @@
                 <span class="text-label-sm text-on-surface-variant">Texto alternativo</span>
                 <input name="content[images][manual_{{ $index }}][alt]" value="{{ is_array($image) ? data_get($image, 'alt') : '' }}" class="h-10 rounded border border-outline-variant bg-surface px-3 text-body-md outline-none transition focus:border-primary">
             </label>
+            @include('dashboard.sections.fields.image-options', [
+                'fieldPrefix' => "content[images][manual_{$index}][settings]",
+                'imageValues' => is_array($image) ? data_get($image, 'settings', []) : [],
+            ])
         </div>
     @endfor
 </div>

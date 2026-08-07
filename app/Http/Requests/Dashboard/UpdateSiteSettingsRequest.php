@@ -25,6 +25,7 @@ class UpdateSiteSettingsRequest extends FormRequest
             'client_contact_email' => ['nullable', 'email', 'max:255'],
             'client_contact_phone' => ['nullable', 'string', 'max:50'],
             'site_name' => ['required', 'string', 'max:255'],
+            'logo_path' => ['nullable', 'string', 'max:1000'],
             'domain' => ['nullable', 'string', 'max:255'],
             'is_active' => ['nullable', 'boolean'],
             'tagline' => ['nullable', 'string', 'max:255'],
@@ -35,6 +36,7 @@ class UpdateSiteSettingsRequest extends FormRequest
             'meta_description' => ['nullable', 'string', 'max:500'],
             'theme' => ['nullable', 'array'],
             'theme.font_family' => ['nullable', Rule::in(array_keys(SiteSetting::FONT_FAMILIES))],
+            'dashboard_theme' => ['nullable', 'array'],
         ];
 
         foreach (array_keys(SiteSetting::THEME_DEFAULTS) as $themeKey) {
@@ -43,6 +45,7 @@ class UpdateSiteSettingsRequest extends FormRequest
             }
 
             $rules["theme.{$themeKey}"] = ['nullable', 'regex:/^#[0-9A-Fa-f]{6}$/'];
+            $rules["dashboard_theme.{$themeKey}"] = ['nullable', 'regex:/^#[0-9A-Fa-f]{6}$/'];
         }
 
         return $rules;

@@ -125,6 +125,8 @@ class SectionController extends Controller
                 'title' => $content['title'] ?? null,
                 'subtitle' => $content['subtitle'] ?? null,
                 'image' => $content['image'] ?? null,
+                'image_settings' => $this->imageSettingsFrom($content['image_settings'] ?? []),
+                'overlay_opacity' => isset($content['overlay_opacity']) ? (int) $content['overlay_opacity'] : null,
                 'button_text' => $content['button_text'] ?? null,
                 'button_url' => $content['button_url'] ?? null,
             ],
@@ -137,6 +139,7 @@ class SectionController extends Controller
                 'body' => $content['body'] ?? null,
                 'image' => $content['image'] ?? null,
                 'image_position' => $content['image_position'] ?? null,
+                'image_settings' => $this->imageSettingsFrom($content['image_settings'] ?? []),
             ],
             'cards' => [
                 'title' => $content['title'] ?? null,
@@ -210,7 +213,7 @@ class SectionController extends Controller
                 'icon' => $item['icon'] ?? null,
                 'title' => $item['title'] ?? null,
                 'description' => $item['description'] ?? null,
-            ], fn (?string $value): bool => filled($value)))
+            ], fn (mixed $value): bool => filled($value)))
             ->filter()
             ->values()
             ->all();
@@ -233,9 +236,32 @@ class SectionController extends Controller
             ->map(fn (array $image): array => array_filter([
                 'url' => $image['url'] ?? null,
                 'alt' => $image['alt'] ?? null,
-            ], fn (?string $value): bool => filled($value)))
+                'settings' => $this->imageSettingsFrom($image['settings'] ?? []),
+            ], fn (mixed $value): bool => filled($value)))
             ->values()
             ->all();
+    }
+
+    /**
+     * @param  array<string, mixed>  $settings
+     * @return array<string, int|string>
+     */
+    private function imageSettingsFrom(array $settings): array
+    {
+        $positions = [
+            'left top', 'center top', 'right top',
+            'left center', 'center center', 'right center',
+            'left bottom', 'center bottom', 'right bottom',
+        ];
+
+        $fit = $settings['fit'] ?? null;
+        $position = $settings['object_position'] ?? null;
+
+        return array_filter([
+            'opacity' => isset($settings['opacity']) ? max(0, min(100, (int) $settings['opacity'])) : null,
+            'object_position' => in_array($position, $positions, true) ? $position : null,
+            'fit' => in_array($fit, ['cover', 'contain', 'fill', 'none'], true) ? $fit : null,
+        ], fn (int|string|null $value): bool => $value !== null);
     }
 
     /**

@@ -70,6 +70,18 @@
                     </label>
 
                     <label class="grid gap-2 sm:col-span-2">
+                        <span class="text-label-md text-on-surface">Logo del sitio</span>
+                        <input name="logo_path" list="site-logo-media" value="{{ old('logo_path', $site->settings->logo_path) }}" placeholder="media/logo.svg o https://..." class="h-10 rounded border border-outline-variant bg-surface px-3 text-body-md outline-none transition focus:border-primary">
+                        <datalist id="site-logo-media">
+                            @foreach($imageMedia as $media)
+                                <option value="{{ $media->path }}">{{ $media->original_name }}</option>
+                            @endforeach
+                        </datalist>
+                        <span class="text-body-sm text-on-surface-variant">Si lo dejas vacio, el sitio mostrara el titulo del negocio. Puedes subir el logo desde Media y seleccionar su ruta aqui.</span>
+                        @error('logo_path') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
+                    </label>
+
+                    <label class="grid gap-2 sm:col-span-2">
                         <span class="text-label-md text-on-surface">Frase descriptiva</span>
                         <input name="tagline" value="{{ old('tagline', $site->settings->tagline) }}" class="h-10 rounded border border-outline-variant bg-surface px-3 text-body-md outline-none transition focus:border-primary">
                         @error('tagline') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
@@ -124,6 +136,7 @@
             @php
                 $themeDefaults = \App\Models\SiteSetting::THEME_DEFAULTS;
                 $theme = array_replace($themeDefaults, $site->settings->theme ?? []);
+                $dashboardTheme = array_replace(\App\Models\SiteSetting::DASHBOARD_THEME_DEFAULTS, $site->settings->dashboard_theme ?? []);
                 $themeGroups = [
                     'Marca' => [
                         'primary' => 'Color principal',
@@ -187,10 +200,10 @@
                                 @foreach($fields as $key => $label)
                                     <label class="grid gap-2">
                                         <span class="text-label-md text-on-surface">{{ $label }}</span>
-                                        <div class="flex items-center gap-3 rounded border border-outline-variant bg-surface px-3 py-2">
-                                            <input type="color" name="theme[{{ $key }}]" value="{{ old('theme.'.$key, $theme[$key]) }}" class="h-8 w-10 rounded border border-outline-variant bg-transparent p-0">
-                                            <span class="text-body-sm text-on-surface-variant">{{ old('theme.'.$key, $theme[$key]) }}</span>
-                                        </div>
+                                                <div class="flex items-center gap-3 rounded border border-outline-variant bg-surface px-3 py-2">
+                                                    <input type="color" data-color-picker="theme-{{ $key }}" value="{{ old('theme.'.$key, $theme[$key]) }}" class="h-8 w-10 rounded border border-outline-variant bg-transparent p-0">
+                                                    <input type="text" name="theme[{{ $key }}]" data-hex-input="theme-{{ $key }}" value="{{ old('theme.'.$key, $theme[$key]) }}" maxlength="7" pattern="^#[0-9A-Fa-f]{6}$" aria-label="Codigo HEX de {{ $label }}" class="min-w-0 flex-1 bg-transparent text-body-sm text-on-surface outline-none">
+                                                </div>
                                         @error('theme.'.$key) <span class="text-body-sm text-error">{{ $message }}</span> @enderror
                                     </label>
                                 @endforeach
@@ -205,6 +218,31 @@
                             <span class="inline-flex rounded bg-secondary-container px-3 py-1 text-label-sm text-on-secondary-container">Etiqueta</span>
                             <span class="text-body-md text-on-surface">Texto principal</span>
                             <span class="text-body-md text-on-surface-variant">Texto secundario</span>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-outline-variant pt-8">
+                        <h3 class="text-headline-md text-primary">Paleta del tablero</h3>
+                        <p class="mt-1 text-body-sm text-on-surface-variant">Estos colores solo afectan la consola administrativa y no cambian el sitio publico.</p>
+
+                        <div class="mt-6 space-y-8">
+                            @foreach($themeGroups as $groupTitle => $fields)
+                                <div>
+                                    <h4 class="text-label-sm uppercase tracking-wider text-on-surface-variant">{{ $groupTitle }}</h4>
+                                    <div class="mt-4 grid gap-5 sm:grid-cols-2">
+                                        @foreach($fields as $key => $label)
+                                            <label class="grid gap-2">
+                                                <span class="text-label-md text-on-surface">{{ $label }}</span>
+                                                <div class="flex items-center gap-3 rounded border border-outline-variant bg-surface px-3 py-2">
+                                                    <input type="color" data-color-picker="dashboard-{{ $key }}" value="{{ old('dashboard_theme.'.$key, $dashboardTheme[$key]) }}" class="h-8 w-10 rounded border border-outline-variant bg-transparent p-0">
+                                                    <input type="text" name="dashboard_theme[{{ $key }}]" data-hex-input="dashboard-{{ $key }}" value="{{ old('dashboard_theme.'.$key, $dashboardTheme[$key]) }}" maxlength="7" pattern="^#[0-9A-Fa-f]{6}$" aria-label="Codigo HEX de {{ $label }} del tablero" class="min-w-0 flex-1 bg-transparent text-body-sm text-on-surface outline-none">
+                                                </div>
+                                                @error('dashboard_theme.'.$key) <span class="text-body-sm text-error">{{ $message }}</span> @enderror
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -240,4 +278,33 @@
             </div>
         </aside>
     </form>
+
+    @push('scripts')
+        <script>
+            document.querySelectorAll('[data-color-picker]').forEach((picker) => {
+                const hexInput = document.querySelector(`[data-hex-input="${picker.dataset.colorPicker}"]`);
+
+                picker.addEventListener('input', () => {
+                    hexInput.value = picker.value.toUpperCase();
+                });
+
+                hexInput.addEventListener('input', () => {
+                    if (/^#[0-9A-Fa-f]{6}$/.test(hexInput.value)) {
+                        picker.value = hexInput.value;
+                    }
+                });
+
+                hexInput.addEventListener('blur', () => {
+                    if (hexInput.value && ! hexInput.value.startsWith('#')) {
+                        hexInput.value = `#${hexInput.value}`;
+                    }
+
+                    if (/^#[0-9A-Fa-f]{6}$/.test(hexInput.value)) {
+                        hexInput.value = hexInput.value.toUpperCase();
+                        picker.value = hexInput.value;
+                    }
+                });
+            });
+        </script>
+    @endpush
 </x-dashboard-layout>

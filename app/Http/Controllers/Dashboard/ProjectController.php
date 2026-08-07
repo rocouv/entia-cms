@@ -92,6 +92,7 @@ class ProjectController extends Controller
             'excerpt' => $validated['excerpt'] ?? null,
             'body' => $validated['body'] ?? null,
             'image_path' => $validated['image_path'] ?? null,
+            'image_settings' => $validated['image_settings'] ?? [],
             'is_published' => $boolean('is_published'),
             'is_featured' => $boolean('is_featured'),
             'sort_order' => $validated['sort_order'],

@@ -21,10 +21,10 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-        <x-theme-style :site-settings="$siteSettings ?? null" />
+        <x-theme-style :site-settings="$siteSettings ?? null" mode="dashboard" />
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="min-h-screen bg-background font-sans text-on-surface antialiased">
+    <body class="dashboard-shell min-h-screen bg-background font-sans text-on-surface antialiased">
         <div class="min-h-screen lg:flex">
             <aside class="border-b border-outline-variant bg-surface-container-low px-4 py-4 lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:w-[260px] lg:border-b-0 lg:border-r">
                 <a href="{{ route('dashboard') }}" class="block text-headline-md font-bold text-primary">Entia CMS</a>
@@ -124,5 +124,6 @@
                 </main>
             </div>
         </div>
+        @stack('scripts')
     </body>
 </html>

@@ -1,8 +1,16 @@
+@php
+    $imageSettings = $content['image_settings'] ?? [];
+    $imageOpacity = max(0, min(100, (int) ($imageSettings['opacity'] ?? 100))) / 100;
+    $imagePosition = in_array($imageSettings['object_position'] ?? null, ['left top', 'center top', 'right top', 'left center', 'center center', 'right center', 'left bottom', 'center bottom', 'right bottom'], true) ? $imageSettings['object_position'] : 'center center';
+    $imageFit = in_array($imageSettings['fit'] ?? null, ['cover', 'contain', 'fill', 'none'], true) ? $imageSettings['fit'] : 'cover';
+    $overlayOpacity = max(0, min(100, (int) ($content['overlay_opacity'] ?? 40))) / 100;
+@endphp
+
 <section class="relative overflow-hidden bg-{{ $settings['background_color'] ?? 'white' }} py-3xl lg:py-[120px]">
     @if($content['image'] ?? false)
         <div class="absolute inset-0">
-            <img src="{{ asset('storage/' . $content['image']) }}" alt="" class="h-full w-full object-cover">
-            <div class="absolute inset-0 bg-black/40"></div>
+            <img src="{{ asset('storage/' . $content['image']) }}" alt="" class="h-full w-full" style="opacity: {{ $imageOpacity }}; object-fit: {{ $imageFit }}; object-position: {{ $imagePosition }};">
+            <div class="absolute inset-0 bg-black" style="opacity: {{ $overlayOpacity }};"></div>
         </div>
     @endif
     <div class="relative mx-auto max-w-7xl px-6 text-center">

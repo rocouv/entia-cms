@@ -22,7 +22,13 @@
             @forelse($projects as $project)
                 <article class="flex h-full flex-col overflow-hidden border border-outline-variant bg-surface-container-lowest">
                     @if($project->imageUrl())
-                        <img src="{{ $project->imageUrl() }}" alt="{{ $project->title }}" class="h-56 w-full object-cover">
+                        @php
+                            $imageSettings = $project->image_settings ?? [];
+                            $imageOpacity = max(0, min(100, (int) ($imageSettings['opacity'] ?? 100))) / 100;
+                            $imagePosition = in_array($imageSettings['object_position'] ?? null, ['left top', 'center top', 'right top', 'left center', 'center center', 'right center', 'left bottom', 'center bottom', 'right bottom'], true) ? $imageSettings['object_position'] : 'center center';
+                            $imageFit = in_array($imageSettings['fit'] ?? null, ['cover', 'contain', 'fill', 'none'], true) ? $imageSettings['fit'] : 'cover';
+                        @endphp
+                        <img src="{{ $project->imageUrl() }}" alt="{{ $project->title }}" class="h-56 w-full" style="opacity: {{ $imageOpacity }}; object-fit: {{ $imageFit }}; object-position: {{ $imagePosition }};">
                     @endif
                     <div class="flex flex-1 flex-col p-6">
                         <div class="flex flex-wrap gap-2 text-label-sm uppercase tracking-wider text-on-surface-variant">

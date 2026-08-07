@@ -113,6 +113,10 @@
                     </datalist>
                     @error('image_path') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
                 </label>
+                @include('dashboard.sections.fields.image-options', [
+                    'fieldPrefix' => 'image_settings',
+                    'imageValues' => old('image_settings', $service?->image_settings ?? []),
+                ])
             </div>
         </div>
 

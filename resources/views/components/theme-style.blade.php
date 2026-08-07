@@ -1,14 +1,16 @@
-@props(['siteSettings' => null])
+@props(['siteSettings' => null, 'mode' => 'public'])
 
 @php
     $themeDefaults = \App\Models\SiteSetting::THEME_DEFAULTS;
-    $theme = array_replace($themeDefaults, $siteSettings?->theme ?? []);
+    $theme = $mode === 'dashboard'
+        ? array_replace($themeDefaults, \App\Models\SiteSetting::DASHBOARD_THEME_DEFAULTS, $siteSettings?->dashboard_theme ?? [])
+        : array_replace($themeDefaults, $siteSettings?->theme ?? []);
 
     $fontFamilies = \App\Models\SiteSetting::FONT_FAMILIES;
     $fontCssFamilies = \App\Models\SiteSetting::FONT_CSS_FAMILIES;
-    $fontFamily = array_key_exists($theme['font_family'] ?? '', $fontFamilies)
+    $fontFamily = $mode === 'dashboard' ? 'Inter' : (array_key_exists($theme['font_family'] ?? '', $fontFamilies)
         ? $theme['font_family']
-        : $themeDefaults['font_family'];
+        : $themeDefaults['font_family']);
 
     $cssVariables = [
         'background' => 'background',
@@ -41,15 +43,16 @@
     ];
 @endphp
 
-@if($fontFamily !== 'Inter')
+@if($mode === 'public' && $fontFamily !== 'Inter')
     <link href="https://fonts.googleapis.com/css2?family={{ $fontFamilies[$fontFamily] }}&display=swap" rel="stylesheet">
 @endif
 
 <style>
-    :root {
+    {{ $mode === 'dashboard' ? '.dashboard-shell' : ':root' }} {
         --theme-font-family: {!! $fontCssFamilies[$fontFamily] !!};
         @foreach($cssVariables as $themeKey => $cssVariable)
             --theme-{{ $cssVariable }}: {{ $theme[$themeKey] ?? $themeDefaults[$themeKey] }};
+            --color-{{ $cssVariable }}: var(--theme-{{ $cssVariable }});
         @endforeach
     }
 </style>
