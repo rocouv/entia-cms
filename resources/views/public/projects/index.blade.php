@@ -4,9 +4,11 @@
             <div>
                 <p class="text-label-sm uppercase tracking-[0.2em] text-on-surface-variant">Proyectos</p>
                 <h1 class="mt-3 text-headline-xl text-primary">Proyectos</h1>
-                <p class="mt-4 w-full text-body-lg text-on-surface-variant">
-                    Casos y trabajos publicados desde el panel administrativo del sitio.
-                </p>
+                @if (filled($site->settings?->projects_description))
+                    <p class="mt-4 w-full text-body-lg text-on-surface-variant">
+                        {{ $site->settings->projects_description }}
+                    </p>
+                @endif
             </div>
         </div>
     </section>

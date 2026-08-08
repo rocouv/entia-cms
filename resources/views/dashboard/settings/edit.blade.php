@@ -52,6 +52,27 @@
 
             <section class="border border-outline-variant bg-surface-container-lowest">
                 <div class="border-b border-outline-variant bg-surface-container-low px-6 py-4">
+                    <h2 class="text-headline-md text-primary">Subtitulos de listados</h2>
+                    <p class="mt-1 text-body-sm text-on-surface-variant">Personaliza o elimina el texto introductorio de las paginas publicas.</p>
+                </div>
+
+                <div class="grid gap-5 p-6">
+                    <label class="grid gap-2">
+                        <span class="text-label-md text-on-surface">Subtitulo de servicios</span>
+                        <textarea name="services_description" rows="3" maxlength="1000" class="rounded border border-outline-variant bg-surface px-3 py-2 text-body-md outline-none transition focus:border-primary">{{ old('services_description', $site->settings->services_description) }}</textarea>
+                        @error('services_description') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
+                    </label>
+
+                    <label class="grid gap-2">
+                        <span class="text-label-md text-on-surface">Subtitulo de proyectos</span>
+                        <textarea name="projects_description" rows="3" maxlength="1000" class="rounded border border-outline-variant bg-surface px-3 py-2 text-body-md outline-none transition focus:border-primary">{{ old('projects_description', $site->settings->projects_description) }}</textarea>
+                        @error('projects_description') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
+                    </label>
+                </div>
+            </section>
+
+            <section class="border border-outline-variant bg-surface-container-lowest">
+                <div class="border-b border-outline-variant bg-surface-container-low px-6 py-4">
                     <h2 class="text-headline-md text-primary">Datos del sitio</h2>
                     <p class="mt-1 text-body-sm text-on-surface-variant">Nombre y dominio publico del sitio.</p>
                 </div>

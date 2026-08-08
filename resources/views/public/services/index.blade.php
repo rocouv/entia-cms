@@ -4,9 +4,11 @@
             <div>
                 <p class="text-label-sm uppercase tracking-[0.2em] text-on-surface-variant">Servicios</p>
                 <h1 class="mt-3 text-headline-xl text-primary">Servicios</h1>
-                <p class="mt-4 w-full text-body-lg text-on-surface-variant">
-                    Soluciones publicadas desde el panel administrativo del sitio.
-                </p>
+                @if (filled($site->settings?->services_description))
+                    <p class="mt-4 w-full text-body-lg text-on-surface-variant">
+                        {{ $site->settings->services_description }}
+                    </p>
+                @endif
             </div>
         </div>
     </section>

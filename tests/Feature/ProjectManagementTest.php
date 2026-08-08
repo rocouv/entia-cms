@@ -5,6 +5,7 @@ use App\Models\Page;
 use App\Models\Project;
 use App\Models\Role;
 use App\Models\Section;
+use App\Models\SiteSetting;
 use App\Models\Site;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -102,11 +103,16 @@ it('renders only published projects publicly', function () {
         'slug' => 'proyecto-borrador',
         'is_published' => false,
     ]);
+    SiteSetting::factory()->for($published->site)->create([
+        'projects_description' => 'Proyectos que convierten ideas en resultados visibles.',
+    ]);
 
     $this->get('/proyectos')
         ->assertOk()
         ->assertSee($published->title)
-        ->assertDontSee($draft->title);
+        ->assertDontSee($draft->title)
+        ->assertSee('Proyectos que convierten ideas en resultados visibles.')
+        ->assertDontSee('Casos y trabajos publicados desde el panel administrativo del sitio.');
 
     $this->get('/proyectos/bruma-cafe')
         ->assertOk()

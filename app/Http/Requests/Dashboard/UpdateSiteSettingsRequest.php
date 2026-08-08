@@ -29,6 +29,8 @@ class UpdateSiteSettingsRequest extends FormRequest
             'domain' => ['nullable', 'string', 'max:255'],
             'is_active' => ['nullable', 'boolean'],
             'tagline' => ['nullable', 'string', 'max:255'],
+            'services_description' => ['nullable', 'string', 'max:1000'],
+            'projects_description' => ['nullable', 'string', 'max:1000'],
             'contact_email' => ['nullable', 'email', 'max:255'],
             'contact_phone' => ['nullable', 'string', 'max:50'],
             'address' => ['nullable', 'string', 'max:1000'],
