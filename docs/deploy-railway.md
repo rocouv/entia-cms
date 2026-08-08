@@ -97,6 +97,22 @@ php artisan entia:install
 
 El comando crea roles, cliente, sitio, configuracion y administrador, pero no crea paginas, servicios, proyectos, categorias ni contenido demo. Rechaza contrasenas debiles y no vuelve a modificar una instalacion existente.
 
+Si ya existe una instalacion y necesitas recuperar el acceso del administrador, configura temporalmente estas variables en Railway:
+
+```env
+ENTIA_ADMIN_RESET_EMAIL=admin@tu-dominio.com
+ENTIA_ADMIN_RESET_PASSWORD=una-nueva-contrasena-de-al-menos-12-caracteres
+```
+
+Ejecuta el comando y elimina ambas variables inmediatamente despues:
+
+```bash
+railway shell
+php artisan entia:admin-reset
+```
+
+El comando solo modifica la contrasena de un usuario que ya tenga el rol administrador; no crea usuarios ni cambia roles.
+
 Para contenido demo local, ejecuta `php artisan db:seed --class=DemoContentSeeder` de forma explicita. Nunca configures un seeder en el arranque de produccion.
 
 Si Railway arranca una version de produccion sin un volumen montado en `/data`, el contenedor termina con un error intencional para evitar que se cree una base temporal y se pierda la informacion.

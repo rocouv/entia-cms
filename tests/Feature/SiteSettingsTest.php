@@ -66,6 +66,8 @@ it('allows administrators to update site settings', function () {
             'domain' => 'cliente.test',
             'is_active' => '1',
             'tagline' => 'Contenido administrable para negocios locales',
+            'services_description' => 'Acompanamos a tu equipo con soluciones hechas a la medida.',
+            'projects_description' => 'Una seleccion de proyectos que muestran nuestro trabajo.',
             'contact_email' => 'hola@cliente.test',
             'contact_phone' => '555-0202',
             'address' => 'Calle Principal 123',
@@ -88,6 +90,8 @@ it('allows administrators to update site settings', function () {
     expect($admin->site->settings->fresh())
         ->site_name->toBe('Sitio Demo')
         ->tagline->toBe('Contenido administrable para negocios locales')
+        ->services_description->toBe('Acompanamos a tu equipo con soluciones hechas a la medida.')
+        ->projects_description->toBe('Una seleccion de proyectos que muestran nuestro trabajo.')
         ->contact_email->toBe('hola@cliente.test')
         ->meta_title->toBe('Sitio Demo');
 });

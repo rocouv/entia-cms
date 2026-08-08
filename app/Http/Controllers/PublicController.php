@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Page;
 use App\Models\Project;
 use App\Models\Service;
+use App\Models\Site;
 use Illuminate\View\View;
 
 class PublicController extends Controller
@@ -31,6 +32,7 @@ class PublicController extends Controller
 
     public function services(): View
     {
+        $site = Site::query()->with('settings')->firstOrFail();
         $services = Service::query()
             ->with('category')
             ->where('is_published', true)
@@ -39,7 +41,7 @@ class PublicController extends Controller
             ->orderBy('title')
             ->get();
 
-        return view('public.services.index', compact('services'));
+        return view('public.services.index', compact('site', 'services'));
     }
 
     public function service(string $slug): View
@@ -55,6 +57,7 @@ class PublicController extends Controller
 
     public function projects(): View
     {
+        $site = Site::query()->with('settings')->firstOrFail();
         $projects = Project::query()
             ->with('category')
             ->where('is_published', true)
@@ -63,7 +66,7 @@ class PublicController extends Controller
             ->orderBy('title')
             ->get();
 
-        return view('public.projects.index', compact('projects'));
+        return view('public.projects.index', compact('site', 'projects'));
     }
 
     public function project(string $slug): View
