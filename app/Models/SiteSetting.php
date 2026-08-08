@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
-#[Fillable(['site_id', 'site_name', 'logo_path', 'tagline', 'services_description', 'projects_description', 'contact_email', 'contact_phone', 'address', 'meta_title', 'meta_description', 'social_links', 'theme', 'dashboard_theme'])]
+#[Fillable(['site_id', 'site_name', 'logo_path', 'tagline', 'services_page_title', 'projects_page_title', 'services_description', 'projects_description', 'contact_email', 'contact_phone', 'address', 'meta_title', 'meta_description', 'social_links', 'theme', 'dashboard_theme'])]
 class SiteSetting extends Model
 {
     /** @use HasFactory<SiteSettingFactory> */

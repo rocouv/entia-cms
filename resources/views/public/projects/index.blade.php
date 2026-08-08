@@ -1,9 +1,11 @@
-<x-layouts.public title="Proyectos" meta-description="Proyectos publicados del sitio.">
+@php($pageTitle = $site->settings?->projects_page_title ?: 'Proyectos')
+
+<x-layouts.public :title="$pageTitle" meta-description="Proyectos publicados del sitio.">
     <section class="bg-surface-container-lowest py-3xl">
         <div class="mx-auto max-w-7xl px-6">
             <div>
                 <p class="text-label-sm uppercase tracking-[0.2em] text-on-surface-variant">Proyectos</p>
-                <h1 class="mt-3 text-headline-xl text-primary">Proyectos</h1>
+                <h1 class="mt-3 text-headline-xl text-primary">{{ $pageTitle }}</h1>
                 @if (filled($site->settings?->projects_description))
                     <p class="mt-4 w-full text-body-lg text-on-surface-variant">
                         {{ $site->settings->projects_description }}

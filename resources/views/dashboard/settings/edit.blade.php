@@ -58,9 +58,21 @@
 
                 <div class="grid gap-5 p-6">
                     <label class="grid gap-2">
+                        <span class="text-label-md text-on-surface">Titulo de la pagina de servicios</span>
+                        <input name="services_page_title" value="{{ old('services_page_title', $site->settings->services_page_title) }}" maxlength="255" class="h-10 rounded border border-outline-variant bg-surface px-3 text-body-md outline-none transition focus:border-primary">
+                        @error('services_page_title') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
+                    </label>
+
+                    <label class="grid gap-2">
                         <span class="text-label-md text-on-surface">Subtitulo de servicios</span>
                         <textarea name="services_description" rows="3" maxlength="1000" class="rounded border border-outline-variant bg-surface px-3 py-2 text-body-md outline-none transition focus:border-primary">{{ old('services_description', $site->settings->services_description) }}</textarea>
                         @error('services_description') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
+                    </label>
+
+                    <label class="grid gap-2">
+                        <span class="text-label-md text-on-surface">Titulo de la pagina de proyectos</span>
+                        <input name="projects_page_title" value="{{ old('projects_page_title', $site->settings->projects_page_title) }}" maxlength="255" class="h-10 rounded border border-outline-variant bg-surface px-3 text-body-md outline-none transition focus:border-primary">
+                        @error('projects_page_title') <span class="text-body-sm text-error">{{ $message }}</span> @enderror
                     </label>
 
                     <label class="grid gap-2">

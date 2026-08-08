@@ -48,6 +48,8 @@ class SiteSettingsController extends Controller
             'site_name' => $validated['site_name'],
             'logo_path' => $validated['logo_path'] ?? null,
             'tagline' => $validated['tagline'],
+            'services_page_title' => $validated['services_page_title'] ?? null,
+            'projects_page_title' => $validated['projects_page_title'] ?? null,
             'services_description' => $validated['services_description'] ?? null,
             'projects_description' => $validated['projects_description'] ?? null,
             'contact_email' => $validated['contact_email'],
