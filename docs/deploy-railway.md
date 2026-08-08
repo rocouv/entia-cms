@@ -40,12 +40,15 @@ PORT=8080
 
 DB_CONNECTION=sqlite
 DB_DATABASE=/data/database/database.sqlite
+DB_BUSY_TIMEOUT=5000
+DB_JOURNAL_MODE=wal
+DB_SYNCHRONOUS=full
 LOG_CHANNEL=stderr
 LOG_LEVEL=info
 CACHE_STORE=file
 SESSION_DRIVER=database
-QUEUE_CONNECTION=database
-FILESYSTEM_DISK=local
+QUEUE_CONNECTION=sync
+FILESYSTEM_DISK=public
 ```
 
 Si defines `APP_KEY` en Railway, esa clave tiene prioridad. Si la omites, `docker/start.sh` genera una clave en el primer arranque y la guarda en `/data/.app_key`. Los reinicios y redeploys reutilizan esa misma clave mientras el Volume de Railway permanezca montado en `/data`.
@@ -73,27 +76,30 @@ No elimines el archivo `/data/.app_key` ni el Volume asociado: hacerlo generaria
 
 ## Bootstrap inicial
 
-Al arrancar, `docker/start.sh` ejecuta migraciones. Si la base no contiene ningun sitio, detecta la instalacion vacia y ejecuta automaticamente `DatabaseSeeder`, que crea:
+Al arrancar, `docker/start.sh` ejecuta solamente las migraciones incrementales y las caches. Nunca ejecuta seeders ni crea datos automaticamente.
 
-- Roles administrador y editor.
-- Sitio y configuracion inicial.
-- Usuario administrador.
-- Pagina home y contenido demo.
-- Categorias, servicios y proyectos demo.
-
-No es necesario replicar manualmente `ENTIA_RUN_SEEDERS=true` en cada instancia. El comportamiento puede controlarse con:
+Antes del primer deploy configura estas variables con datos reales:
 
 ```env
-ENTIA_RUN_SEEDERS=auto
+ENTIA_ADMIN_NAME=Administrador
+ENTIA_ADMIN_EMAIL=admin@tu-dominio.com
+ENTIA_ADMIN_PASSWORD=una-contrasena-de-al-menos-12-caracteres
+ENTIA_CLIENT_NAME=Nombre del cliente
+ENTIA_SITE_NAME=Nombre del sitio
 ```
 
-Valores disponibles:
+Despues del primer deploy ejecuta una unica vez desde Railway:
 
-- `auto`: si no existe un sitio, ejecuta seeders; si ya existe, no modifica contenido.
-- `true`: fuerza los seeders en cada arranque. Usarlo solo para una instalacion controlada.
-- `false`: desactiva los seeders.
+```bash
+railway shell
+php artisan entia:install
+```
 
-Para instalaciones nuevas se recomienda dejar `ENTIA_RUN_SEEDERS` sin definir o usar `auto`.
+El comando crea roles, cliente, sitio, configuracion y administrador, pero no crea paginas, servicios, proyectos, categorias ni contenido demo. Rechaza contrasenas debiles y no vuelve a modificar una instalacion existente.
+
+Para contenido demo local, ejecuta `php artisan db:seed --class=DemoContentSeeder` de forma explicita. Nunca configures un seeder en el arranque de produccion.
+
+Si Railway arranca una version de produccion sin un volumen montado en `/data`, el contenedor termina con un error intencional para evitar que se cree una base temporal y se pierda la informacion.
 
 ## Verificacion
 
@@ -101,3 +107,5 @@ Para instalaciones nuevas se recomienda dejar `ENTIA_RUN_SEEDERS` sin definir o 
 - `/` debe mostrar la home.
 - `/login` debe mostrar el acceso administrativo.
 - `/dashboard` debe requerir autenticacion.
+- Un redeploy debe conservar los registros y archivos del volumen.
+- La configuracion de Backups del volumen debe tener al menos una periodicidad diaria.

@@ -19,7 +19,7 @@ Ultimo commit base remoto:
 Estado del modulo actual:
 
 ```txt
-Configuracion inicial de despliegue en Fly.io agregada directamente en main.
+Despliegue productivo consolidado en Railway con SQLite persistente.
 ```
 
 Rama remota:
@@ -31,7 +31,7 @@ origin/main
 Estado de sincronizacion:
 
 ```txt
-main actualizado desde origin/main antes de configurar Fly.io.
+main actualizado desde origin/main antes de endurecer el bootstrap de Railway.
 ```
 
 Pull request:
@@ -128,12 +128,13 @@ Sin PR: cambio solicitado directamente en main.
 - Errores de envio se registran en logs sin exponer detalles internos al visitante.
 - `.env.example` documenta `RESEND_API_KEY`, `CONTACT_FROM_EMAIL`, `CONTACT_FROM_NAME` y `CONTACT_TO_EMAIL`.
 - Dependencia `resend/resend-php` instalada para el transport `resend` de Laravel.
-- Configuracion inicial de Fly.io agregada con `Dockerfile`, `fly.toml`, `.dockerignore`, scripts bajo `docker/` y guia `docs/deploy-fly.md`.
-- Fly.io usa un volume persistente `entia_data` montado en `/data`.
-- SQLite en Fly.io vive en `/data/database/database.sqlite`.
+- Railway usa `Dockerfile.railway`, `railway.toml` y un volumen persistente montado en `/data`.
+- SQLite en Railway vive en `/data/database/database.sqlite`.
 - Media publica persistente vive en `/data/storage/app/public` y se enlaza a `storage/app/public` durante el arranque.
 - El contenedor ejecuta migraciones, `storage:link` y caches de Laravel al arrancar.
-- Los seeders son opcionales mediante `ENTIA_RUN_SEEDERS=true` para evitar sobrescribir contenido demo en cada deploy.
+- El arranque de produccion nunca ejecuta seeders ni crea contenido demo.
+- `php artisan entia:install` crea una instalacion nueva usando variables obligatorias y rechaza instalaciones ya existentes.
+- SQLite usa WAL, `busy_timeout` y `synchronous=full` para reducir bloqueos y proteger escrituras.
 
 ## Verificaciones recientes
 
@@ -221,15 +222,15 @@ La migracion `2026_06_10_000008_add_theme_to_site_settings_table` agrega `site_s
 
 ## Siguiente paso recomendado
 
-Checklist de despliegue con SQLite, backups, storage persistente y SSL.
+Checklist de despliegue en Railway con SQLite, backups, storage persistente y SSL.
 
 Objetivo:
 
-- Documentar despliegue inicial con SQLite.
+- Documentar despliegue inicial con SQLite en Railway.
 - Definir storage persistente para media y base SQLite.
 - Agregar checklist de backups.
 - Cubrir dominio real del cliente, SSL y variables de entorno requeridas.
-- Dejar claro el camino futuro para migrar a MySQL si el proyecto crece.
+- Mantener una sola instancia mientras SQLite sea la base de produccion.
 
 ## Pendientes posteriores
 
@@ -251,7 +252,7 @@ Objetivo:
 - Para envio real de contacto, configurar `RESEND_API_KEY` y `CONTACT_TO_EMAIL` o definir correo de contacto en configuracion del sitio.
 - No commitear `.env`, bases SQLite con datos locales, `vendor`, `node_modules` ni artefactos privados de storage.
 - Si se prueba media localmente, ejecutar `php artisan storage:link` si `public/storage` no existe.
-- Si se actualiza una base existente, ejecutar `php artisan migrate` para crear `categories`, `services` y `projects` ademas de migraciones previas.
+- Si se actualiza una base existente, ejecutar `php artisan migrate` para aplicar solo migraciones pendientes; nunca usar `migrate:fresh` en produccion.
 
 ## Ajustes recientes de interfaz
 

@@ -9,6 +9,7 @@ use App\Models\Section;
 use App\Models\Service;
 use App\Models\Site;
 use Illuminate\Database\Seeder;
+use LogicException;
 
 class DemoContentSeeder extends Seeder
 {
@@ -17,6 +18,10 @@ class DemoContentSeeder extends Seeder
      */
     public function run(): void
     {
+        if (app()->environment('production')) {
+            throw new LogicException('DemoContentSeeder solo puede ejecutarse fuera de produccion.');
+        }
+
         $site = Site::query()->with(['client', 'settings'])->firstOrFail();
 
         $site->client->update([

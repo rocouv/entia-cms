@@ -1,6 +1,13 @@
 #!/usr/bin/env sh
 set -eu
 
+cd /var/www/html
+
+if [ "${APP_ENV:-local}" = "production" ] && ! grep -qE '[[:space:]]/data[[:space:]]' /proc/mounts; then
+    printf '%s\n' 'ERROR: Railway debe montar un volumen persistente en /data antes de iniciar Entia.' >&2
+    exit 1
+fi
+
 mkdir -p \
     /data/database \
     /data/storage/app/public \
@@ -35,22 +42,6 @@ fi
 
 php artisan migrate --force --no-interaction
 php artisan optimize:clear --except=cache --no-interaction
-
-seed_mode="${ENTIA_RUN_SEEDERS:-auto}"
-
-if [ "$seed_mode" = "auto" ]; then
-    site_state="$(php artisan tinker --execute='echo \App\Models\Site::query()->exists() ? "existing" : "empty";' 2>/dev/null | tr -d '\r\n')"
-
-    if [ "$site_state" = "empty" ]; then
-        seed_mode="true"
-    else
-        seed_mode="false"
-    fi
-fi
-
-if [ "$seed_mode" = "true" ]; then
-    php artisan db:seed --force --no-interaction
-fi
 
 php artisan storage:link --force --no-interaction
 php artisan config:cache --no-interaction
