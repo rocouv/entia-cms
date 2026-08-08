@@ -6,6 +6,7 @@ use App\Models\Role;
 use App\Models\Section;
 use App\Models\Service;
 use App\Models\Site;
+use App\Models\SiteSetting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -100,11 +101,16 @@ it('renders only published services publicly', function () {
         'slug' => 'servicio-borrador',
         'is_published' => false,
     ]);
+    SiteSetting::factory()->for($published->site)->create([
+        'services_description' => 'Soluciones digitales para equipos que quieren avanzar.',
+    ]);
 
     $this->get('/servicios')
         ->assertOk()
         ->assertSee($published->title)
-        ->assertDontSee($draft->title);
+        ->assertDontSee($draft->title)
+        ->assertSee('Soluciones digitales para equipos que quieren avanzar.')
+        ->assertDontSee('Soluciones publicadas desde el panel administrativo del sitio.');
 
     $this->get('/servicios/campanas-digitales')
         ->assertOk()
