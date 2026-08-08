@@ -102,6 +102,7 @@ it('renders only published services publicly', function () {
         'is_published' => false,
     ]);
     SiteSetting::factory()->for($published->site)->create([
+        'services_page_title' => 'Soluciones para tu negocio',
         'services_description' => 'Soluciones digitales para equipos que quieren avanzar.',
     ]);
 
@@ -109,6 +110,7 @@ it('renders only published services publicly', function () {
         ->assertOk()
         ->assertSee($published->title)
         ->assertDontSee($draft->title)
+        ->assertSee('Soluciones para tu negocio')
         ->assertSee('Soluciones digitales para equipos que quieren avanzar.')
         ->assertDontSee('Soluciones publicadas desde el panel administrativo del sitio.');
 

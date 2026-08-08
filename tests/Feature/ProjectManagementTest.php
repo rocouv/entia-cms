@@ -104,6 +104,7 @@ it('renders only published projects publicly', function () {
         'is_published' => false,
     ]);
     SiteSetting::factory()->for($published->site)->create([
+        'projects_page_title' => 'Proyectos que dejan huella',
         'projects_description' => 'Proyectos que convierten ideas en resultados visibles.',
     ]);
 
@@ -111,6 +112,7 @@ it('renders only published projects publicly', function () {
         ->assertOk()
         ->assertSee($published->title)
         ->assertDontSee($draft->title)
+        ->assertSee('Proyectos que dejan huella')
         ->assertSee('Proyectos que convierten ideas en resultados visibles.')
         ->assertDontSee('Casos y trabajos publicados desde el panel administrativo del sitio.');
 
