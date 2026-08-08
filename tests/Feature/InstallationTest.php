@@ -109,3 +109,37 @@ it('does not allow demo content seeding in production', function () {
     expect(fn () => $this->artisan('db:seed', ['--class' => 'DemoContentSeeder', '--force' => true]))
         ->toThrow(LogicException::class, 'DemoContentSeeder solo puede ejecutarse fuera de produccion.');
 });
+
+it('resets the password of an existing administrator from temporary configuration', function () {
+    configureInstallation();
+
+    $this->artisan('entia:install')->assertExitCode(0);
+
+    config([
+        'entia.install.reset_email' => 'admin@example.test',
+        'entia.install.reset_password' => 'otra-contrasena-segura',
+    ]);
+
+    $this->artisan('entia:admin-reset')
+        ->expectsOutput('Contrasena actualizada para admin@example.test.')
+        ->assertExitCode(0);
+
+    expect(Hash::check('otra-contrasena-segura', User::query()->firstOrFail()->password))->toBeTrue();
+});
+
+it('does not reset an unknown administrator or accept a weak reset password', function () {
+    configureInstallation();
+
+    $this->artisan('entia:install')->assertExitCode(0);
+
+    config([
+        'entia.install.reset_email' => 'unknown@example.test',
+        'entia.install.reset_password' => 'password',
+    ]);
+
+    $this->artisan('entia:admin-reset')
+        ->expectsOutput('ENTIA_ADMIN_RESET_PASSWORD debe tener al menos 12 caracteres y no puede ser password.')
+        ->assertExitCode(1);
+
+    expect(Hash::check('una-contrasena-segura', User::query()->firstOrFail()->password))->toBeTrue();
+});
