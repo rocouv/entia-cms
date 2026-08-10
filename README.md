@@ -1,58 +1,112 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Entia CMS
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Entia CMS es un gestor de contenido para administrar sitios públicos desde un dashboard protegido. Permite crear y publicar páginas, secciones, media, categorías, servicios y proyectos.
 
-## About Laravel
+## Funcionalidades
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Autenticación administrativa con perfiles **Administrador** y **Editor**.
+- Páginas con slug, publicación, home, navegación y campos SEO.
+- Secciones dinámicas: Hero, texto, imagen y texto, tarjetas, galería, servicios, proyectos, contacto y preguntas frecuentes.
+- Biblioteca Media para imágenes y PDF de hasta 5 MB.
+- Categorías, servicios y proyectos con publicación, destacados, orden e imágenes.
+- Configuración general del cliente, sitio, contacto, SEO, logo, tipografía y colores.
+- Formulario público de contacto con limitación de envíos y transporte de correo configurable.
+- Despliegue preparado para Railway con SQLite persistente.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Laravel 13 y PHP 8.4.
+- Blade y Tailwind CSS 4.
+- Vite 8.
+- SQLite.
+- Pest para pruebas y Laravel Pint para formato.
 
-## Learning Laravel
+## Requisitos
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- PHP 8.4 o superior.
+- Composer.
+- Node.js y npm.
+- SQLite habilitado para PHP.
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Instalación local
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
+cp .env.example .env
+php artisan key:generate
+touch database/database.sqlite
+php artisan migrate
+npm install
+npm run build
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Configura en `.env` la conexión SQLite y, para crear la primera cuenta, las variables `ENTIA_ADMIN_NAME`, `ENTIA_ADMIN_EMAIL`, `ENTIA_ADMIN_PASSWORD`, `ENTIA_CLIENT_NAME` y `ENTIA_SITE_NAME`. La contraseña inicial debe tener al menos 12 caracteres.
 
-## Contributing
+```bash
+php artisan entia:install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Para cargar contenido ficticio únicamente en desarrollo:
 
-## Code of Conduct
+```bash
+php artisan db:seed --class=DemoContentSeeder
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+No ejecutes el seeder demo en producción.
 
-## Security Vulnerabilities
+## Desarrollo
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+composer dev
+```
 
-## License
+El comando inicia el servidor Laravel, el listener de colas, los logs y Vite. También puedes ejecutar solo `php artisan serve` y `npm run dev`.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Pruebas y formato
+
+```bash
+./vendor/bin/pest tests/Feature
+./vendor/bin/pint --test
+npm run build
+```
+
+El comando `composer test` puede intentar cargar `tests/Unit`, que no existe actualmente. Para este proyecto usa la suite de Feature indicada arriba.
+
+## Documentación para clientes
+
+La documentación está en español y separada por nivel de detalle:
+
+- [Guía de inicio rápido](docs/inicio-rapido.md): tareas habituales para comenzar.
+- [Manual completo de usuario](docs/manual-de-usuario.md): permisos, módulos, campos, publicación, eliminación y problemas frecuentes.
+- [Despliegue en Railway](docs/deploy-railway.md): operación técnica del entorno productivo.
+
+Para regenerar los PDF desde los archivos Markdown:
+
+```bash
+composer docs
+```
+
+Los archivos resultantes se guardan en `docs/generated/`.
+
+## Limitaciones conocidas del MVP
+
+- No hay importación ni exportación de contenido.
+- No hay papelera, historial editorial ni recuperación de contraseña desde la interfaz.
+- La búsqueda del encabezado todavía no filtra contenido.
+- El formulario de contacto no guarda mensajes dentro del dashboard.
+- Eliminar Media puede romper referencias a imágenes existentes; eliminar una página también elimina sus secciones.
+
+Consulta el [manual de usuario](docs/manual-de-usuario.md) antes de realizar eliminaciones o cambios de publicación.
+
+## Despliegue
+
+Entia incluye `Dockerfile.railway`, `railway.toml` y un script de arranque para Railway. La base SQLite y los archivos Media deben conservarse en un volumen persistente montado en `/data`.
+
+Consulta [docs/deploy-railway.md](docs/deploy-railway.md) para variables, instalación inicial, correo, backups y verificaciones.
+
+## Seguridad
+
+- No subas `.env`, contraseñas, claves API, bases SQLite con datos reales ni archivos de Media privados.
+- Mantén `APP_DEBUG=false` en producción.
+- Usa contraseñas únicas y elimina las variables temporales de recuperación después de utilizarlas.
+- Configura backups del volumen de producción.
