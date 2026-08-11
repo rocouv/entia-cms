@@ -12,7 +12,9 @@
         "resend/resend-php": "^1.3"
     },
     "require-dev": {
+        "dompdf/dompdf": "^3.1",
         "fakerphp/faker": "^1.23",
+        "league/commonmark": "^2.8",
         "laravel/pail": "^1.2.5",
         "laravel/pint": "^1.27",
         "mockery/mockery": "^1.6",
@@ -49,6 +51,7 @@
             "@php artisan config:clear --ansi @no_additional_args",
             "@php ./vendor/bin/pest"
         ],
+        "docs": "@php scripts/build-docs.php",
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
